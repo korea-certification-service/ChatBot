@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Document</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="chat_wrap" id="chatWrap">
+        <header class="header">
+            <h1>Chat Bot ver.1.0.0</h1>
+        </header>
+        <div class="content" id="content">
+            <div class="chat-wrap">
+                <em class="my_id">사용자</em>
+                <div class="bubble my_speech"><p>사용자 채팅</p></div>
+            </div>
+            <div class="chat-wrap">
+                <em class="mach_id">챗봇</em>
+                <div class="bubble mach_speech"><p>챗봇 채팅</p></div>
+            </div>
+        </div>
+        <footer class="footer cf">
+            <div class="msg_sec cf">
+                <button class="btn_at" id="btnAt"><img src="/img/ico_@.png" alt="@"></button>
+                <input type="text" class="ipt_chat" id="iptChat" placeholder="메세지를 입력하세요.">
+                <button class="btn_send" id="btnSend" disabled>Send</button>
+            </div>
+            <!-- <div class="util_sec cf">
+                <button class="btn_sharp">#</button>
+                <button class="btn_emoji">&#128513;</button>
+            </div> -->
+            <div class="at_sec" id="atSec">
+                <div class="mach_command machCmd">@마하 거래시작</div>
+                <div class="mach_command machCmd">@마하 거래안내</div>
+                <div class="mach_command machCmd">@마하 거래중단</div>
+                <div class="mach_command machCmd">@마하 거래흥정</div>
+                <div class="mach_command machCmd">@마하 거래시작</div>
+                <div class="mach_command machCmd">@마하 거래안내</div>
+                <div class="mach_command machCmd">@마하 거래중단</div>
+                <div class="mach_command machCmd">@마하 거래흥정</div>
+            </div>
+        </footer>
+    </div>
+    
+<script src="custom.js"></script>
+<script src="callAjax.js"></script>
+</body>
+</html>
