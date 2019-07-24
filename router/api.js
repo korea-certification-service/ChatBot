@@ -1,7 +1,7 @@
 module.exports = (app) => {
 
     app.get('/', (req, res) => {
-        res.send("server");
+        res.render("index.html");
     });
 
     //단순한 echo API
