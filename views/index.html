@@ -11,28 +11,19 @@
 <body>
     <div class="chat_wrap" id="chatWrap">
         <header class="header">
-            <h1>Chat Bot ver.1.0.0</h1>
+            <h1>Chat Bot ver 1.0.0</h1>
         </header>
         <div class="content" id="content">
-            <div class="chat-wrap">
-                <em class="my_id">사용자</em>
-                <div class="bubble my_speech"><p>사용자 채팅</p></div>
-            </div>
-            <div class="chat-wrap">
-                <em class="mach_id">챗봇</em>
-                <div class="bubble mach_speech"><p>챗봇 채팅</p></div>
-            </div>
+            <!-- 동적으로 추가되는 채팅내역 -->
         </div>
         <footer class="footer cf">
             <div class="msg_sec cf">
                 <button class="btn_at" id="btnAt"><img src="/img/ico_@.png" alt="@"></button>
-                <input type="text" class="ipt_chat" id="iptChat" placeholder="메세지를 입력하세요.">
-                <button class="btn_send" id="btnSend" disabled>Send</button>
+                <form>
+                    <input type="text" class="ipt_chat" id="iptChat" placeholder="메세지를 입력하세요." autocomplete="off">
+                    <button class="btn_send" id="btnSend" disabled>SEND</button>
+                </form>
             </div>
-            <!-- <div class="util_sec cf">
-                <button class="btn_sharp">#</button>
-                <button class="btn_emoji">&#128513;</button>
-            </div> -->
             <div class="at_sec" id="atSec">
                 <div class="mach_command machCmd">@마하 거래시작</div>
                 <div class="mach_command machCmd">@마하 거래안내</div>
@@ -47,6 +38,46 @@
     </div>
     
 <script src="js/custom.js"></script>
-<script src="js/callAjax.js"></script>
+<script>
+    var userId = "<%=userId%>";
+    var loginToken = "<%=loginToken%>"
+    var $content = $("#content");
+    var $iptChat = $("#iptChat");
+    var $btnSend = $("#btnSend");
+    var origin = location.origin;
+
+    addChat("챗봇","mach_id", "mach_speech", "안뇽~^^");
+
+    $btnSend.bind("click", function(e) {
+        var val = $iptChat.val();
+
+        addChat("","my_id", "my_speech", val);
+
+        $.ajax({
+            method: "POST",
+            url: origin+"/logic",
+            data: {"userText": val, "userId": userId, "loginToken": loginToken }
+        }).done(function(data) {
+            console.log(data);
+
+            addChat("챗봇","mach_id", "mach_speech", data);//챗봇의 답변
+
+            $content.scrollTop($content[0].scrollHeight);
+            $iptChat.val("");
+
+        }).fail(function(fail) {
+            console.log(fail);
+        });
+
+    });
+
+    function addChat(who, foo_id, foo_speech, text) {
+        var userChat = '<div class="chat-wrap">'+
+                            '<em class="'+foo_id+'">'+who+'</em>'+
+                            '<div class="bubble '+foo_speech+'"><p>'+text+'</p></div>'+
+                        '</div>'
+        $content.append(userChat);
+    }
+</script>
 </body>
 </html>

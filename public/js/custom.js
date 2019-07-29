@@ -55,18 +55,29 @@ var chatUI = {
 
     },
     onSend: function () {
-        document.getElementById("iptChat").addEventListener("input", function(e){
+
+        var btnSend = document.getElementById("btnSend");
+        var iptChat = document.getElementById("iptChat");
+
+        iptChat.addEventListener("input", function(e){
+            btnOnOff(e);
+        });
+        btnSend.addEventListener("click", function(e){
+            btnOnOff(e);
+        });
+
+        function btnOnOff(e){
             var val = e.currentTarget.value;
             if(val != "") {
-                document.getElementById("btnSend").style.backgroundColor = "#54a0ff";
-                document.getElementById("btnSend").style.color = "#fff";
-                document.getElementById("btnSend").removeAttribute("disabled");
+                btnSend.style.backgroundColor = "#54a0ff";
+                btnSend.style.color = "#fff";
+                btnSend.removeAttribute("disabled");
             } else if(val == ""){
-                document.getElementById("btnSend").style.backgroundColor = "rgb(221, 221, 221)";
-                document.getElementById("btnSend").style.color = "#9c9c9c";
-                document.getElementById("btnSend").setAttribute("disabled", "true");
+                btnSend.style.backgroundColor = "#fff";
+                btnSend.style.color = "#9c9c9c";
+                btnSend.setAttribute("disabled", "true");
             }
-        });
+        }
     }
 }    
 chatUI.init();
