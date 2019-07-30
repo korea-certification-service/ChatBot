@@ -36,7 +36,7 @@ module.exports = (app) => {
         history.exception_text = null
 
         //1차 가공
-        let regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"| ]/gi;
+        let regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
         let input_text = userText.replace(regExp, "");
         console.log(`input_text => ${input_text}`);
 
@@ -47,7 +47,7 @@ module.exports = (app) => {
             json: true
         })
         .then(data => { 
-            console.log(`data => ${data}`);
+    
             if(data == null) { //예상 질의와 일치하지 않는 경우
 
                 //새로운 sentence 객체 생성
@@ -80,7 +80,6 @@ module.exports = (app) => {
                     .then(data => {
                         console.log(data);
                         if(data == null) { //예상 질의와 일치하지 않는 경우
-                            let input_code = Math.random().toString()+Date.now();
                             
                             request({
                                 uri: `${uri}/exception/get/detail`,
@@ -90,7 +89,8 @@ module.exports = (app) => {
                                 },
                                 json: true  
                             }).then(exception => {
-                                
+                                let input_code = Math.random().toString()+Date.now();
+
                                 sentence.input_text = userText;
                                 sentence.en_sentence = en_sentence;
                                 sentence.ko_sentence = null;
@@ -125,7 +125,6 @@ module.exports = (app) => {
                             })
                             .then(data => {
                                 if(data == null) { //답변이 없는 경우
-                                    let input_code = Math.random().toString()+Date.now();
 
                                     request({
                                         uri: `${uri}/exception/get/detail`,
@@ -135,6 +134,7 @@ module.exports = (app) => {
                                         },
                                         json: true  
                                     }).then(exception => {
+                                        let input_code = Math.random().toString()+Date.now();
 
                                         sentence.input_text = userText;
                                         sentence.en_sentence = en_sentence;
@@ -160,7 +160,7 @@ module.exports = (app) => {
 
                                 } else { //답변이 있는 경우
                                     let randomAnswer = data[Math.floor(Math.random() * data.length)];
-                                    let input_code = data.input_code;
+                                    let input_code = randomAnswer.input_code;
 
                                     sentence.input_text = userText;
                                     sentence.en_sentence = en_sentence;
@@ -230,7 +230,7 @@ module.exports = (app) => {
 
                     } else { //예상 질의에 해당하는 답변이 있는 경우
                         let randomAnswer = data[Math.floor(Math.random() * data.length)];
-                        let input_code =  data.input_code;
+                        let input_code =  randomAnswer.input_code;
                     
                         history.user_id = userId;
                         history.user_tag = null;
@@ -243,12 +243,12 @@ module.exports = (app) => {
                         save_history(uri, history);//[DB추가(History Collection)]
                     
                         res.status(200).send(randomAnswer.answer_text_ko);//답변
-
+                        //console.log(data);
                     }
-
                 })
 
             }
+
         })
         .catch(err => {
             console.error(err);
