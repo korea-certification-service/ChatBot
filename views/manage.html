@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>temp chatbot manage</title>
+<meta charset="utf-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<style>
+* {
+    box-sizing: border-box;
+}
+table.type09 {
+    border-collapse: collapse;
+    text-align: left;
+    line-height: 1.5;
+    margin: 0 auto;
+}
+table.type09 thead th {
+    padding: 10px;
+    font-weight: bold;
+    vertical-align: top;
+    color: #369;
+    border-bottom: 3px solid #036;
+}
+table.type09 tbody th {
+    width: 150px;
+    padding: 10px;
+    font-weight: bold;
+    vertical-align: top;
+    border-bottom: 1px solid #ccc;
+    background: #f3f6f7;
+}
+table.type09 td {
+    width: 350px;
+    padding: 10px;
+    vertical-align: top;
+    border-bottom: 1px solid #ccc;
+}
+form {
+    width: 400px;
+    margin: 0 auto;
+}
+form > div > textarea{
+    height: 150px;
+}
+#InputCode {
+    width: 400px;
+}
+#answerTextKo {
+    width: 400px;
+}
+</style>
+</head>
+<body>
+    
+   <main>
+       
+       <fieldset>
+            <legend>
+                <h2>답변 추가하기</h2>
+            </legend>
+            <form>
+                <div class="ans_input_code">
+                    <h3>답변 할 질의 코드(input_code)</h3>
+                    <input type="text" id="InputCode">
+                </div>
+                <div class="ans_text_ko">
+                    <h3>답변(answer_text_ko)</h3>
+                    <textarea id="answerTextKo" style="resize:none;"></textarea>
+                </div>
+                <button id="addAnswer">답변생성</button>
+            </form>
+       </fieldset>
+       <fieldset>
+            <legend>
+                 <h2>문장의미(sentence) 리스트</h2>
+            </legend>
+             <table class="type09">
+                 <thead>
+                     <th scope="cols">input_code</th>
+                     <th scope="cols">input_text</th>
+                     <th scope="cols">en_sentence</th>
+                 </thead>
+                 <tbody id="sentensList">
+                     <!--
+                     <tr>
+                         <td></td>
+                         <td></td>
+                         <td></td>
+                     </tr>
+                     -->   
+                 </tbody>
+             </table>
+        </fieldset>
+       <fieldset>
+            <legend>
+                 <h2>답변(answer) 리스트</h2>
+            </legend>
+             <table class="type09">
+                 <thead>
+                     <th scope="cols">input_code</th>
+                     <th scope="cols">answer_text_ko</th>
+                     <th scope="cols">수정</th>
+                 </thead>
+                 <tbody id="answersList">
+                     <!--
+                     <tr>
+                         <td>input_code</td>
+                         <td>answer_text_ko</td>
+                     </tr>
+                     -->   
+                 </tbody>
+             </table>
+        </fieldset>
+       
+   </main> 
+
+</body>
+<script>
+$.ajax({
+    method: "GET",
+    url: "http://localhost:6001/sentence/get/list"
+})
+.done(function(data) {
+    data.forEach(el => {
+        let tr = `<tr>
+                    <td>${el.input_code}</td>
+                    <td>${el.input_text}</td>
+                    <td>${el.en_sentence}</td>
+                </tr>`
+
+        $("#sentensList").append(tr);
+    });
+})
+.fail(function(fail){
+    console.log(fail);
+});
+
+$.ajax({
+    method: "GET",
+    url: "http://localhost:6001/answer/get/list"
+})
+.done(function(data) {
+    data.forEach(el => {
+        let tr = `<tr>
+                    <td>${el.input_code}</td>
+                    <td>${el.answer_text_ko}</td>
+                    <td><a href="javascript:edit(\'${el.input_code}\');">수정</a></td>
+                </tr>`
+
+        $("#answersList").append(tr);
+    });
+    console.log(data);
+})
+.fail(function(fail){
+    console.log(fail);
+});
+
+$("#addAnswer").on("click", function(){
+
+    var inputCode = $("#InputCode").val();
+    var answerTextKo = $("#answerTextKo").val();
+    $.ajax({
+        method: "POST",
+        url: "http://localhost:6001/answer/add",
+        data: { "input_code": inputCode, "answer_text_ko": answerTextKo  }
+    })
+    .done(function(data) {
+        console.log(data);
+    })
+    .fail(function(fail){
+        console.log(fail);
+    });
+});
+
+function edit(input_code){
+    var editedText = prompt("답변 수정하기");
+    if(editedText == null) return;
+    $.ajax({
+        method: "PUT",
+        url: "http://localhost:6001/answer/update",
+        data: { 
+            "input_code": input_code,
+            "answer_text_ko": editedText
+        } 
+    })
+    .done(function(data){
+        console.log(data);
+    })
+    .fail(function(fail){
+        console.log(fail);
+    })
+}  
+</script>
+</html>

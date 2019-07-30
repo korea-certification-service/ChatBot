@@ -1,5 +1,6 @@
 module.exports = (app) => {
     let request = require('request-promise-native');
+    let config = require('../config/config');
 
     //챗봇 화면 랜더링
     app.get('/', (req, res) => {
@@ -14,12 +15,20 @@ module.exports = (app) => {
 
     });
 
+    app.get('/manage/:id', (req, res) => {
+        if(req.params.id === "machadmin") {
+            res.render("manage.html");
+        } else {
+            res.send("잘못된 요청");
+        }
+    })
+
     //챗봇 응답 로직 api
     app.post('/logic', async (req, res) => {
 
         console.log(req.body); //클라이언트가 전달한 데이터 객체
 
-        let uri = "http://localhost:6001";
+        let uri = config.uri;
         let userText = req.body.userText;//유저가 입력한 텍스트
         let userId = req.body.userId;//유저 아이디
         // let loginToken = req.body.loginToken;//유저의 로그인 토큰
@@ -48,8 +57,8 @@ module.exports = (app) => {
         })
         .then(data => { 
     
-            if(data == null) { //예상 질의와 일치하지 않는 경우
-
+            if(data == null || data.length === 0) { //예상 질의와 일치하지 않는 경우
+                console.log("1차 가공후 예상 질의와 일치하지 않는 경우");
                 //새로운 sentence 객체 생성
                 let sentence = new Object;
                 sentence.input_text = userText;
@@ -78,9 +87,9 @@ module.exports = (app) => {
                         json: true
                     })
                     .then(data => {
-                        console.log(data);
-                        if(data == null) { //예상 질의와 일치하지 않는 경우
-                            
+
+                        if(data == null || data.length === 0) { //예상 질의와 일치하지 않는 경우
+                            console.log("2차 가공후 예상 질의와 일치하지 않는 경우");
                             request({
                                 uri: `${uri}/exception/get/detail`,
                                 method: 'GET',
@@ -109,12 +118,11 @@ module.exports = (app) => {
                                 save_history(uri, history);
     
                                 res.status(200).send(exception.exception_text);
-                                console.log(exception.exception_script);
 
                             })
                             
                         } else { //예상 질의와 일치한 경우
-
+                            console.log("2차 가공후 예상 질의와 일치한 경우");
                             return request({
                                 uri: `${uri}/answer/get/list`,
                                 method: 'GET',
@@ -124,8 +132,9 @@ module.exports = (app) => {
                                 json: true  
                             })
                             .then(data => {
-                                if(data == null) { //답변이 없는 경우
-
+                                console.log(data);
+                                if(data == null || data.length === 0) { //답변이 없는 경우
+                                    console.log("2차 가공후 답변이 없는 경우");
                                     request({
                                         uri: `${uri}/exception/get/detail`,
                                         method: 'GET',
@@ -159,6 +168,7 @@ module.exports = (app) => {
                                     });
 
                                 } else { //답변이 있는 경우
+                                    console.log("2차 가공후 답변이 있는 경우")
                                     let randomAnswer = data[Math.floor(Math.random() * data.length)];
                                     let input_code = randomAnswer.input_code;
 
@@ -191,7 +201,7 @@ module.exports = (app) => {
                 })
 
             } else { //예상 질의와 일치한 경우
-
+                console.log("1차 가공후 예상 질의와 일치한 경우");
                 return request({
                     uri: `${uri}/answer/get/list`,
                     method: 'GET',
@@ -202,8 +212,8 @@ module.exports = (app) => {
                 })
                 .then(data => {
 
-                    if(data == null) { //예상 질의에 해당하는 답변이 없는경우
-
+                    if(data == null || data.length === 0) { //예상 질의에 해당하는 답변이 없는경우
+                        console.log("1차 가공후 예상 질의에 해당하는 답변이 없는경우");
                         request({
                             uri: `${uri}/exception/get/detail`,
                             method: 'GET',
@@ -224,11 +234,11 @@ module.exports = (app) => {
                             save_history(uri, history);
                 
                             res.status(200).send(exception.exception_text);
-                            console.log(exception.exception_script);
 
                         });
 
                     } else { //예상 질의에 해당하는 답변이 있는 경우
+                        console.log("1차 가공후 예상 질의에 해당하는 답변이 있는 경우");
                         let randomAnswer = data[Math.floor(Math.random() * data.length)];
                         let input_code =  randomAnswer.input_code;
                     

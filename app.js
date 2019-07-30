@@ -1,8 +1,8 @@
 let express = require('express');
 let bodyParser = require('body-parser');    
 let cors = require('cors')();
+let config = require('./config/config');
 let app = express();
-let port = 4100;
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -17,9 +17,8 @@ app.use(cors);
 
 require('./routes/api')(app);
 
-let server = app.listen(port, () => {
+let server = app.listen(config.port, () => {
     console.log(`
-        Express server has started on port ${port}
-        ==> http://localhost:${port}
+        Express server has started on port ${config.port}
     `);
 });
