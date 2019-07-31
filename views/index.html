@@ -56,7 +56,7 @@
 
         $.ajax({
             method: "POST",
-            url: origin+"/logic",
+            url: "/logic",
             data: {"userText": val, "userId": userId, "loginToken": loginToken },
             cache:false
         }).done(function(data) {
