@@ -22,7 +22,7 @@
                 <input type="text" class="ipt_chat" id="iptChat" placeholder="메세지를 입력하세요." autocomplete="off">
                 <button class="btn_send" id="btnSend" disabled>SEND</button>
             </div>
-            <div class="at_sec" id="atSec">
+            <!-- <div class="at_sec" id="atSec">
                 <div class="mach_command machCmd">@마하 거래시작</div>
                 <div class="mach_command machCmd">@마하 거래안내</div>
                 <div class="mach_command machCmd">@마하 거래중단</div>
@@ -31,7 +31,7 @@
                 <div class="mach_command machCmd">@마하 거래안내</div>
                 <div class="mach_command machCmd">@마하 거래중단</div>
                 <div class="mach_command machCmd">@마하 거래흥정</div>
-            </div>
+            </div> -->
         </footer>
     </div>
     
@@ -47,7 +47,18 @@
 
     addChat("챗봇","mach_id", "mach_speech", "안뇽~^^");
 
-    $btnSend.bind("click", function(e) {
+    $btnSend.on("click", function(e) {
+        call();
+    });
+
+    $btnSend.on("keypress", function(e) {
+        e.preventDefault();
+        if(e.keyCode == 13) {
+            call();
+        }
+    });
+
+    function call() {
         var val = $iptChat.val();
 
         addChat("","my_id", "my_speech", val);
@@ -68,8 +79,7 @@
         }).fail(function(fail) {
             console.log(fail);
         });
-
-    });
+    }
 
     function addChat(who, foo_id, foo_speech, text) {
         var userChat = '<div class="chat-wrap">'+
