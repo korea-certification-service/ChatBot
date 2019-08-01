@@ -71,7 +71,7 @@ button{border: none; cursor: pointer;}
 
 .footer{height: 70px; position: relative;padding-top:7px;}
 .footer .btn_sharp{font-size: 28px;}
-.footer .ipt_chat{float: left; margin-top: 5.5px; margin-left: 25px; width: calc(100% - 150px); height: 30px; font-size: 18px; border: none;}
+.footer .ipt_chat{float: left; margin-top: 5.5px; margin-left: 25px; width: calc(100% - 150px); height: 30px; font-size: 18px; border: none; ime-mode: active;}
 .footer .btn_send{float: right; margin-right: 20px; width: 60px; height: 38px; font-weight: 600; color: #9c9c9c; border: 1px solid #9c9c9c; border-radius: 5px; font-size: 18px;background-color: #fff;}
 .footer .btn_at{float: left; margin-top: 4px; margin-left: 15px; width: 30px; height: 30px;}
 .footer .btn_emoji{font-size: 30px; line-height: 30px;}
