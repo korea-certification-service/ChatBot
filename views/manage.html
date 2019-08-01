@@ -118,7 +118,7 @@ form > div > textarea{
 <script>
 $.ajax({
     method: "GET",
-    url: "http://localhost:6001/sentence/get/list"
+    url: "<%=url%>/sentence/get/list"
 })
 .done(function(data) {
     data.forEach(el => {
@@ -137,7 +137,7 @@ $.ajax({
 
 $.ajax({
     method: "GET",
-    url: "http://localhost:6001/answer/get/list"
+    url: "<%=url%>/answer/get/list"
 })
 .done(function(data) {
     data.forEach(el => {
