@@ -161,7 +161,7 @@ $("#addAnswer").on("click", function(){
     var answerTextKo = $("#answerTextKo").val();
     $.ajax({
         method: "POST",
-        url: "http://localhost:6001/answer/add",
+        url: "<%=url%>/answer/add",
         data: { "input_code": inputCode, "answer_text_ko": answerTextKo  }
     })
     .done(function(data) {
@@ -177,7 +177,7 @@ function edit(input_code){
     if(editedText == null) return;
     $.ajax({
         method: "PUT",
-        url: "http://localhost:6001/answer/update",
+        url: "<%=url%>/answer/update",
         data: { 
             "input_code": input_code,
             "answer_text_ko": editedText

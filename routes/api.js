@@ -17,7 +17,7 @@ module.exports = (app) => {
 
     app.get('/manage/:id', (req, res) => {
         if(req.params.id === "machadmin") {
-            res.render("manage.html");
+            res.render("manage.html", {url: config.uri});
         } else {
             res.send("잘못된 요청");
         }
