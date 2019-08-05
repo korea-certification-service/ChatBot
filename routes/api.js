@@ -31,6 +31,7 @@ module.exports = (app) => {
         let uri = config.uri;
         let userText = req.body.userText;//유저가 입력한 텍스트
         let userId = req.body.userId;//유저 아이디
+        let country = req.body.country;//유저 국가 코드
         // let loginToken = req.body.loginToken;//유저의 로그인 토큰
 
         //기본 hitory객체 생성
@@ -46,7 +47,7 @@ module.exports = (app) => {
 
         //1차 가공
         let regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
-        let input_text = userText.replace(regExp, "");
+        let input_text = userText.replace(regExp, "").toLowerCase();
         console.log(`input_text => ${input_text}`);
 
         request({ 
@@ -112,16 +113,23 @@ module.exports = (app) => {
                                 history.en_sentence = en_sentence;
                                 history.ko_sentence = null;
                                 history.input_code = input_code;
-                                history.bot_text = exception.exception_text;
+                                if(country === "KR") {
+                                    history.bot_text = exception.exception_text_ko;
+                                } else if(country === "EN") {
+                                    history.bot_text = exception.exception_text_en;
+                                }
     
                                 save_sentence(uri, sentence);
                                 save_history(uri, history);
     
-                                res.status(200).send(exception.exception_text);
+                                res.status(200).send(history.bot_text);
 
                             })
                             
                         } else { //예상 질의와 일치한 경우
+                            console.log(data);
+                            let currect_code =  data.input_code;
+
                             console.log("2차 가공후 예상 질의와 일치한 경우");
                             return request({
                                 uri: `${uri}/answer/get/list`,
@@ -143,12 +151,10 @@ module.exports = (app) => {
                                         },
                                         json: true  
                                     }).then(exception => {
-                                        let input_code = Math.random().toString()+Date.now();
-
                                         sentence.input_text = userText;
                                         sentence.en_sentence = en_sentence;
                                         sentence.ko_sentence = null;
-                                        sentence.input_code = input_code;
+                                        sentence.input_code = currect_code;
                                         sentence.keyword = en_sentence.split(' ');
             
                                         history.user_id = userId;
@@ -156,14 +162,17 @@ module.exports = (app) => {
                                         history.input_text = userText;
                                         history.en_sentence = en_sentence;
                                         history.ko_sentence = null;
-                                        history.input_code = input_code;
-                                        history.bot_text = exception.exception_text;
-            
+                                        history.input_code = currect_code;
+                                        if(country === "KR") {
+                                            history.bot_text = exception.exception_text_ko;
+                                        } else if(country === "EN") {
+                                            history.bot_text = exception.exception_text_en;
+                                        }
+
                                         save_sentence(uri, sentence);
                                         save_history(uri, history);
     
-                                        res.status(200).send(exception.exception_text);
-                                        console.log(exception.exception_script);
+                                        res.status(200).send(history.bot_text);
 
                                     });
 
@@ -229,11 +238,15 @@ module.exports = (app) => {
                             history.en_sentence = null;
                             history.ko_sentence = null;
                             history.input_code = null;
-                            history.bot_text = exception.exception_text;
-    
+                            if(country === "KR") {
+                                history.bot_text = exception.exception_text_ko;
+                            } else if(country === "EN") {
+                                history.bot_text = exception.exception_text_en;
+                            }
+
                             save_history(uri, history);
                 
-                            res.status(200).send(exception.exception_text);
+                            res.status(200).send(history.bot_text);
 
                         });
 
@@ -248,11 +261,15 @@ module.exports = (app) => {
                         history.en_sentence = null;
                         history.ko_sentence = null;
                         history.input_code = input_code;
-                        history.bot_text = randomAnswer.answer_text_ko;
-
+                        if(country === "KR") {
+                            history.bot_text = randomAnswer.answer_text_ko;
+                        } else if(country === "EN") {
+                            history.bot_text = randomAnswer.answer_text_en;
+                        }
+                        
                         save_history(uri, history);//[DB추가(History Collection)]
                     
-                        res.status(200).send(randomAnswer.answer_text_ko);//답변
+                        res.status(200).send(history.bot_text);//답변
                         //console.log(data);
                     }
                 })
