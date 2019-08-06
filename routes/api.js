@@ -99,7 +99,12 @@ module.exports = (app) => {
                                 },
                                 json: true  
                             }).then(exception => {
-                                let input_code = Math.random().toString()+Date.now();
+                                let _arr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                                let randomString;
+                                for(let i = 0, max = 4; i < max; i++ ) {
+                                    randomString += _arr.charAt(Math.floor(Math.random()*_arr.length));
+                                }
+                                let input_code = randomString+Date.now();
 
                                 sentence.input_text = userText;
                                 sentence.en_sentence = en_sentence;
