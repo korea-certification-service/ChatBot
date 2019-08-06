@@ -70,12 +70,14 @@
 
     console.log($btnSend);
     $btnSend.on("click", function(e) {
-        console.log(1);
+
         if(disabledBtn) {
             return;
         }
-        console.log(2);
+
+        
         call();
+        $iptChat.val("");
 
         $btnSend
         .css({backgroundColor: "#fff",color: "#9c9c9c", border: "1.5px solid #9c9c9c"})
@@ -104,6 +106,7 @@
             }
 
             call();
+            $iptChat.val("");
 
             $btnSend.css({backgroundColor: "#fff",color: "#9c9c9c", border: "1.5px solid #9c9c9c"})
             disabledBtn = true;
@@ -132,7 +135,6 @@
             addChat("Chatbot","mach_id", "mach_speech", splitText);//챗봇의 답변
 
             $content.scrollTop($content[0].scrollHeight);
-            $iptChat.val("");
 
         }).fail(function(fail) {
             console.log(fail);
