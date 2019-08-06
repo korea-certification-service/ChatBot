@@ -22,7 +22,7 @@
             <div class="msg_sec cf">
                 <button class="btn_at" id="btnAt"><i class="fas fa-paper-plane"></i></button>
                 <input type="text" class="ipt_chat" id="iptChat" autocomplete="off">
-                <button class="btn_send" id="btnSend" disabled>Send</button>
+                <button class="btn_send" id="btnSend">Send</button>
             </div>
             <div class="at_sec" id="atSec">
                 <div class="mach_command machCmd" id="mach_command01"></div>
@@ -41,11 +41,11 @@
     var $btnSend = $("#btnSend");
     var origin = location.origin;
     var country_code;
-    var disabledBtn = false;
+    var disabledBtn = true;
 
     var greetings = {
         ko: "안녕하세요~",
-        en: "What's up"
+        en: "Hello"
     }
 
     $.ajax({
@@ -68,28 +68,36 @@
         console.log(fail)
     })
 
+    console.log($btnSend);
     $btnSend.on("click", function(e) {
+        console.log(1);
         if(disabledBtn) {
             return;
         }
-
+        console.log(2);
         call();
 
         $btnSend
-        .css({backgroundColor: "#fff",color: "#9c9c9c"})
+        .css({backgroundColor: "#fff",color: "#9c9c9c", border: "1.5px solid #9c9c9c"})
         disabledBtn = true;
     });
 
     $iptChat.bind("keypress input", function(e) {
         if(e.type === "input") {
             var widthoutVoid = $iptChat.val().replace(/\s/gi,"");
+
             if($iptChat.val() == ""|| widthoutVoid == "") { //텍스트가 없거나 공백만 있을때
+
                 $btnSend.css({backgroundColor: "#fff",color: "#9c9c9c", border: "1.5px solid #9c9c9c"})
                 disabledBtn = true;
+
             } else if($iptChat.val() != ""){ //텍스트가 존재할때
+
                 $btnSend.css({backgroundColor: "#54a0ff",color: "#fff", border: "none"})
                 disabledBtn = false;
+
             }
+
         } else if(e.type === "keypress" && e.keyCode == 13) {
             if(disabledBtn) {
                 return;
@@ -97,7 +105,7 @@
 
             call();
 
-            $btnSend.css({backgroundColor: "#fff",color: "#9c9c9c",})
+            $btnSend.css({backgroundColor: "#fff",color: "#9c9c9c", border: "1.5px solid #9c9c9c"})
             disabledBtn = true;
         }
     });
