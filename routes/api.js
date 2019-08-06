@@ -8,7 +8,7 @@ module.exports = (app) => {
         if(!req.query.loginToken) {
             res.render("notice.html");
         } else {
-            res.render("index.html",{ userId: req.query.userId, loginToken: req.query.loginToken });
+            res.render("index.html",{ userId: req.query.userId, loginToken: req.query.loginToken, MarketMach_uri: config.MarketMach_uri });
         }
 
         console.log(req.query);
@@ -79,8 +79,8 @@ module.exports = (app) => {
                     },
                 })
                 .then(data => {
-                    let regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
-                    let en_sentence = JSON.parse(data).data.translations[0].translatedText.replace(regExp, "");
+                    let regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\"]/gi;
+                    let en_sentence = JSON.parse(data).data.translations[0].translatedText.replace(/&#39;/gi,"'").replace(regExp, "").toLowerCase();
                     request({ 
                         uri: `${uri}/sentence/get/detail`,
                         method: 'GET',

@@ -35,6 +35,7 @@
 <script>
     var userId = "<%=userId%>";
     var loginToken = "<%=loginToken%>";
+    var MarketMach_uri = "<%=MarketMach_uri%>";
     var $content = $("#content");
     var $iptChat = $("#iptChat");
     var $btnSend = $("#btnSend");
@@ -49,7 +50,7 @@
 
     $.ajax({
         method: "GET",
-        url: "http://localhost:3000/v1/users/"+userId,
+        url: MarketMach_uri+"/v1/users/"+userId,
     }).done(function(res) {
         country_code = res.data.country || "KR";
         if(country_code === "KR") {
