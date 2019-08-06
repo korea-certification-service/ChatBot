@@ -40,6 +40,7 @@
     var $btnSend = $("#btnSend");
     var origin = location.origin;
     var country_code;
+    var disabledBtn = false;
 
     var greetings = {
         ko: "안녕하세요~",
@@ -67,27 +68,36 @@
     })
 
     $btnSend.on("click", function(e) {
+        if(disabledBtn) {
+            return;
+        }
+
         call();
 
         $btnSend
         .css({backgroundColor: "#fff",color: "#9c9c9c"})
-        removeAttr("disabled");
+        disabledBtn = true;
     });
 
     $iptChat.bind("keypress input", function(e) {
         if(e.type === "input") {
-            if($iptChat.val() == "") {
+            var widthoutVoid = $iptChat.val().replace(/\s/gi,"");
+            if($iptChat.val() == ""|| widthoutVoid == "") { //텍스트가 없거나 공백만 있을때
                 $btnSend.css({backgroundColor: "#fff",color: "#9c9c9c", border: "1.5px solid #9c9c9c"})
-                $btnSend.removeAttr("disabled");
-            } else if($iptChat.val() != ""){
+                disabledBtn = true;
+            } else if($iptChat.val() != ""){ //텍스트가 존재할때
                 $btnSend.css({backgroundColor: "#54a0ff",color: "#fff", border: "none"})
-                $btnSend.attr("disabled");
+                disabledBtn = false;
             }
         } else if(e.type === "keypress" && e.keyCode == 13) {
+            if(disabledBtn) {
+                return;
+            }
+
             call();
 
             $btnSend.css({backgroundColor: "#fff",color: "#9c9c9c",})
-            $btnSend.removeAttr("disabled");
+            disabledBtn = true;
         }
     });
 
