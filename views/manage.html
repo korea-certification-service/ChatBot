@@ -45,9 +45,27 @@ form > div > textarea{
 #InputCode {
     width: 400px;
 }
-#answerTextKo {
+.ans_text {
     width: 400px;
 }
+
+.ans_text textarea{
+    width: 100%;
+}
+
+.dialog table{
+    width: 100%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.dialog table tr th {
+    text-align: left;
+}
+.dialog table tr td input {
+    width: 100%;
+}
+
 </style>
 </head>
 <body>
@@ -63,9 +81,13 @@ form > div > textarea{
                     <h3>답변 할 질의 코드(input_code)</h3>
                     <input type="text" id="InputCode">
                 </div>
-                <div class="ans_text_ko">
+                <div class="ans_text">
                     <h3>답변(answer_text_ko)</h3>
                     <textarea id="answerTextKo" style="resize:none;"></textarea>
+                </div>
+                <div class="ans_text">
+                    <h3>답변(answer_text_en)</h3>
+                    <textarea id="answerTextEn" style="resize:none;"></textarea>
                 </div>
                 <button id="addAnswer">답변생성</button>
             </form>
@@ -76,9 +98,12 @@ form > div > textarea{
             </legend>
              <table class="type09">
                  <thead>
+                     <th scope="cols">_id</th>
                      <th scope="cols">input_code</th>
                      <th scope="cols">input_text</th>
                      <th scope="cols">en_sentence</th>
+                     <th scope="cols">수정</th>
+                     <th scope="cols">삭제</th>
                  </thead>
                  <tbody id="sentensList">
                      <!--
@@ -97,9 +122,12 @@ form > div > textarea{
             </legend>
              <table class="type09">
                  <thead>
+                     <th scope="cols">_id</th>
                      <th scope="cols">input_code</th>
                      <th scope="cols">answer_text_ko</th>
+                     <th scope="cols">answer_text_en</th>
                      <th scope="cols">수정</th>
+                     <th scope="cols">삭제</th>
                  </thead>
                  <tbody id="answersList">
                      <!--
@@ -116,6 +144,7 @@ form > div > textarea{
 
 </body>
 <script>
+//sentence 리스트
 $.ajax({
     method: "GET",
     url: "<%=url%>/sentence/get/list"
@@ -123,9 +152,12 @@ $.ajax({
 .done(function(data) {
     data.forEach(el => {
         let tr = `<tr>
+                    <td>${el._id}</td>
                     <td>${el.input_code}</td>
                     <td>${el.input_text}</td>
                     <td>${el.en_sentence}</td>
+                    <td><a href="javascript:sentenceEdit(\'${el.input_code}\');">수정</a></td>
+                    <td><a href="javascript:sentenceDelete(\'${el._id}\');">삭제</a></td>
                 </tr>`
 
         $("#sentensList").append(tr);
@@ -135,6 +167,7 @@ $.ajax({
     console.log(fail);
 });
 
+//answer 리스트
 $.ajax({
     method: "GET",
     url: "<%=url%>/answer/get/list"
@@ -142,9 +175,12 @@ $.ajax({
 .done(function(data) {
     data.forEach(el => {
         let tr = `<tr>
+                    <td>${el._id}</td>
                     <td>${el.input_code}</td>
                     <td>${el.answer_text_ko}</td>
-                    <td><a href="javascript:edit(\'${el.input_code}\');">수정</a></td>
+                    <td>${el.answer_text_en}</td>
+                    <td><a href="javascript:answerEdit(\'${el.input_code}\');">수정</a></td>
+                    <td><a href="javascript:answerDelete(\'${el._id}\');">삭제</a></td>
                 </tr>`
 
         $("#answersList").append(tr);
@@ -159,10 +195,17 @@ $("#addAnswer").on("click", function(){
 
     var inputCode = $("#InputCode").val();
     var answerTextKo = $("#answerTextKo").val();
+    var answerTextEn = $("#answerTextEn").val() == '' ? null : $("#answerTextEn").val();
+    alert(answerTextEn);
+    //answer 추가
     $.ajax({
         method: "POST",
         url: "<%=url%>/answer/add",
-        data: { "input_code": inputCode, "answer_text_ko": answerTextKo  }
+        data: { 
+            "input_code": inputCode,
+            "answer_text_ko": answerTextKo,
+            "answer_text_en": answerTextEn
+        }
     })
     .done(function(data) {
         console.log(data);
@@ -170,10 +213,53 @@ $("#addAnswer").on("click", function(){
     .fail(function(fail){
         console.log(fail);
     });
+
 });
 
-function edit(input_code){
-    var editedText = prompt("답변 수정하기");
+//sentence 수정
+function sentenceEdit(input_code){
+    var editedText = prompt("input_code");
+    if(editedText == null) return;
+    $.ajax({
+        method: "PUT",
+        url: "<%=url%>/sentence/update",
+        data: { 
+            "input_code": input_code,
+            "ed_input_code": editedText
+        } 
+    })
+    .done(function(data){
+        console.log(data);
+        location.reload();
+    })
+    .fail(function(fail){
+        alert(fail);
+    })
+} 
+
+//sentence 삭제
+function sentenceDelete(_id){
+    var _confirm = confirm("해당 sentence를 삭제하시겠습니까?");
+    if(_confirm == false) return;
+    $.ajax({
+        method: "DELETE",
+        url: "<%=url%>/sentence/delete",
+        data: {
+            "_id": _id
+        }
+    })
+    .done(function(data){
+        console.log(data);
+        location.reload();
+    })
+    .fail(function(fail){
+        alert(fail);
+    })
+}  
+
+//answer 수정
+function answerEdit(input_code){
+    var editedText = prompt("answer_text_ko");
     if(editedText == null) return;
     $.ajax({
         method: "PUT",
@@ -185,10 +271,33 @@ function edit(input_code){
     })
     .done(function(data){
         console.log(data);
+        location.reload();
     })
     .fail(function(fail){
-        console.log(fail);
+        alert(fail);
     })
 }  
+
+//answer 삭제
+function answerDelete(_id){
+    var _confirm = confirm("해당 answer 삭제하시겠습니까?");
+    console.log(_confirm);
+    if(_confirm == false) return;
+    $.ajax({
+        method: "DELETE",
+        url: "<%=url%>/answer/delete",
+        data: {
+            "_id": _id
+        }
+    })
+    .done(function(data){
+        console.log(data);
+        location.reload();
+    })
+    .fail(function(fail){
+        alert(fail);
+    })
+} 
+
 </script>
 </html>
