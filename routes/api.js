@@ -79,7 +79,7 @@ module.exports = (app) => {
                     },
                 })
                 .then(data => {
-                    let regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\"]/gi;
+                    let regExp = /[\{\}\[\]\/.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\"]/gi;
                     let en_sentence = JSON.parse(data).data.translations[0].translatedText.replace(/&#39;/gi,"'").replace(regExp, "").toLowerCase();
                     request({ 
                         uri: `${uri}/sentence/get/detail`,
