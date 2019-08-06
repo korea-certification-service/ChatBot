@@ -50,7 +50,7 @@
         method: "GET",
         url: "http://localhost:3000/v1/users/"+userId,
     }).done(function(res) {
-        country_code = res.data.country | "KR";
+        country_code = res.data.country || "KR";
         if(country_code === "KR") {
             addChat("Chatbot","mach_id", "mach_speech", greetings.ko);
             $iptChat.attr("placeholder", "메세지를 입력하세요.");

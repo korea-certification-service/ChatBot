@@ -100,7 +100,7 @@ module.exports = (app) => {
                                 json: true  
                             }).then(exception => {
                                 let _arr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                                let randomString;
+                                let randomString = '';
                                 for(let i = 0, max = 4; i < max; i++ ) {
                                     randomString += _arr.charAt(Math.floor(Math.random()*_arr.length));
                                 }
