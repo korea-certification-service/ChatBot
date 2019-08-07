@@ -46,7 +46,7 @@ module.exports = (app) => {
         history.exception_text = null
 
         //1차 가공
-        let regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+        let regExp = /[\{\}\[\]\/.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
         let input_text = userText.replace(regExp, "").toLowerCase();
         console.log(`input_text => ${input_text}`);
 
