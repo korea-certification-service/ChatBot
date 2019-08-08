@@ -142,6 +142,8 @@
     }
     function addChat(who, foo_id, foo_speech, text) {
 
+        var isUrl = text[0].match(/^(file|gopher|news|nntp|telnet|https?|ftps?|sftp):\/\/([a-z0-9-]+\.)+[a-z0-9]{2,4}.*$/gi) != null;
+
         if(typeof text === "object" && text.length > 1 ) {
 
             var userChat = '<div class="chat-wrap">'+
@@ -157,7 +159,7 @@
 
             $content.append(userChat);
 
-        } else if(typeof text === "string" || (typeof text === "object" && text.length === 1 ) ) {
+        } else if(typeof text === "string" && isUrl == false || (typeof text === "object" && text.length === 1 && isUrl == false) ) {
            
             var userChat = '<div class="chat-wrap">'+
                                 '<em class="'+foo_id+'">'+who+'</em>'+
@@ -166,6 +168,14 @@
 
             $content.append(userChat);
 
+        } else if(isUrl == true) {
+            console.log("아아아");
+            var userChat = '<div class="chat-wrap">'+
+                                '<em class="'+foo_id+'">'+who+'</em>'+
+                                '<div class="bubble '+foo_speech+'"><p><a href="'+text+'" target="_blank">'+text+'</a></p></div>'+
+                            '</div>'
+
+            $content.append(userChat);
         }
 
     }
