@@ -227,15 +227,15 @@ $("#addAnswer").on("click", function(){
 });
 
 //sentence 수정
-function sentenceEdit(input_code){
+function sentenceEdit(_id){
     var editedText = prompt("input_code");
     if(editedText == null) return;
     $.ajax({
         method: "PUT",
         url: "<%=url%>/sentence/update",
         data: { 
-            "input_code": input_code,
-            "ed_input_code": editedText
+            "_id": _id,
+            "input_code": editedText
         } 
     })
     .done(function(data){
@@ -268,14 +268,14 @@ function sentenceDelete(_id){
 }  
 
 //answer 수정
-function answerEditKO(input_code){
+function answerEditKO(_id){
     var editedText = prompt("answer_text_ko");
     if(editedText == null) return;
     $.ajax({
         method: "PUT",
         url: "<%=url%>/answer/update/answer_text_ko",
         data: { 
-            "input_code": input_code,
+            "_id": _id,
             "answer_text_ko": editedText
         } 
     })
@@ -289,14 +289,14 @@ function answerEditKO(input_code){
     })
 }  
 
-function answerEditEN(input_code){
+function answerEditEN(_id){
     var editedText = prompt("answer_text_en");
     if(editedText == null) return;
     $.ajax({
         method: "PUT",
         url: "<%=url%>/answer/update/answer_text_en",
         data: { 
-            "input_code": input_code,
+            "_id": _id,
             "answer_text_en": editedText
         } 
     })
