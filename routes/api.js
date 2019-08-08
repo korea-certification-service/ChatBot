@@ -5,7 +5,7 @@ module.exports = (app) => {
     //챗봇 화면 랜더링
     app.get('/', (req, res) => {
 
-        if(!req.query.loginToken) {
+        if(!req.query.loginToken || !req.query.userId) {
             res.render("notice.html");
         } else {
             res.render("index.html",{ userId: req.query.userId, loginToken: req.query.loginToken, MarketMach_uri: config.MarketMach_uri });
