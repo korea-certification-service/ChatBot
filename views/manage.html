@@ -65,14 +65,18 @@ form > div > textarea{
 .dialog table tr td input {
     width: 100%;
 }
-
+nav {
+    background-color: #aaa;
+    padding: 10px;
+}
+nav a {
+    display: block;
+}
 </style>
 </head>
 <body>
-    
    <main>
-       
-       <fieldset>
+       <fieldset id="add">
             <legend>
                 <h2>답변 추가하기</h2>
             </legend>
@@ -92,7 +96,8 @@ form > div > textarea{
                 <button id="addAnswer">답변생성</button>
             </form>
        </fieldset>
-       <fieldset>
+
+       <fieldset id="sentence">
             <legend>
                  <h2>문장의미(sentence) 리스트</h2>
             </legend>
@@ -116,7 +121,8 @@ form > div > textarea{
                  </tbody>
              </table>
         </fieldset>
-       <fieldset>
+
+       <fieldset id="answer">
             <legend>
                  <h2>답변(answer) 리스트</h2>
             </legend>
@@ -126,8 +132,7 @@ form > div > textarea{
                      <th scope="cols">input_code</th>
                      <th scope="cols">answer_text_ko</th>
                      <th scope="cols">answer_text_en</th>
-                     <th scope="cols">수정</th>
-                     <th scope="cols">삭제</th>
+                     <th scope="cols">-</th>
                  </thead>
                  <tbody id="answersList">
                      <!--
@@ -139,9 +144,12 @@ form > div > textarea{
                  </tbody>
              </table>
         </fieldset>
-       
    </main> 
-
+   <nav style="position: fixed; top:50%; right:0px; transform: translateY(-50%);">
+       <a href="#add">답변 추가하기</a>
+       <a href="#sentence">sentences</a>
+       <a href="#answer">answers</a>
+   </nav>
 </body>
 <script>
 //sentence 리스트
@@ -156,8 +164,8 @@ $.ajax({
                     <td>${el.input_code}</td>
                     <td>${el.input_text}</td>
                     <td>${el.en_sentence}</td>
-                    <td><a href="javascript:sentenceEdit(\'${el.input_code}\');">수정</a></td>
-                    <td><a href="javascript:sentenceDelete(\'${el._id}\');">삭제</a></td>
+                    <td><button onClick="sentenceEdit(\'${el.input_code}\');">수정</button></td>
+                    <td><button onClick="sentenceDelete(\'${el._id}\');">삭제</button></td>
                 </tr>`
 
         $("#sentensList").append(tr);
@@ -177,10 +185,9 @@ $.ajax({
         let tr = `<tr>
                     <td>${el._id}</td>
                     <td>${el.input_code}</td>
-                    <td>${el.answer_text_ko}</td>
-                    <td>${el.answer_text_en}</td>
-                    <td><a href="javascript:answerEdit(\'${el.input_code}\');">수정</a></td>
-                    <td><a href="javascript:answerDelete(\'${el._id}\');">삭제</a></td>
+                    <td>${el.answer_text_ko}<button onClick="answerEditKO(\'${el.input_code}\');" style="margin-left:10px;">수정</button></td>
+                    <td>${el.answer_text_en}<button onClick="answerEditEN(\'${el.input_code}\');" style="margin-left:10px;">수정</button></td>
+                    <td><button onClick="answerDelete(\'${el._id}\');">삭제</button></td>
                 </tr>`
 
         $("#answersList").append(tr);
@@ -196,7 +203,7 @@ $("#addAnswer").on("click", function(){
     var inputCode = $("#InputCode").val();
     var answerTextKo = $("#answerTextKo").val();
     var answerTextEn = $("#answerTextEn").val() == '' ? null : $("#answerTextEn").val();
-    alert(answerTextEn);
+
     //answer 추가
     $.ajax({
         method: "POST",
@@ -258,12 +265,12 @@ function sentenceDelete(_id){
 }  
 
 //answer 수정
-function answerEdit(input_code){
+function answerEditKO(input_code){
     var editedText = prompt("answer_text_ko");
     if(editedText == null) return;
     $.ajax({
         method: "PUT",
-        url: "<%=url%>/answer/update",
+        url: "<%=url%>/answer/update/answer_text_ko",
         data: { 
             "input_code": input_code,
             "answer_text_ko": editedText
@@ -278,9 +285,29 @@ function answerEdit(input_code){
     })
 }  
 
+function answerEditEN(input_code){
+    var editedText = prompt("answer_text_en");
+    if(editedText == null) return;
+    $.ajax({
+        method: "PUT",
+        url: "<%=url%>/answer/update/answer_text_en",
+        data: { 
+            "input_code": input_code,
+            "answer_text_en": editedText
+        } 
+    })
+    .done(function(data){
+        console.log(data);
+        location.reload();
+    })
+    .fail(function(fail){
+        alert(fail);
+    })
+}  
+
 //answer 삭제
 function answerDelete(_id){
-    var _confirm = confirm("해당 answer 삭제하시겠습니까?");
+    var _confirm = confirm("해당 answer를 삭제하시겠습니까?");
     console.log(_confirm);
     if(_confirm == false) return;
     $.ajax({
