@@ -72,6 +72,9 @@ nav {
 nav a {
     display: block;
 }
+button {
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -164,7 +167,7 @@ $.ajax({
                     <td>${el.input_code}</td>
                     <td>${el.input_text}</td>
                     <td>${el.en_sentence}</td>
-                    <td><button onClick="sentenceEdit(\'${el.input_code}\');">수정</button></td>
+                    <td><button onClick="sentenceEdit(\'${el._id}\');">수정</button></td>
                     <td><button onClick="sentenceDelete(\'${el._id}\');">삭제</button></td>
                 </tr>`
 
@@ -185,8 +188,8 @@ $.ajax({
         let tr = `<tr>
                     <td>${el._id}</td>
                     <td>${el.input_code}</td>
-                    <td>${el.answer_text_ko}<button onClick="answerEditKO(\'${el.input_code}\');" style="margin-left:10px;">수정</button></td>
-                    <td>${el.answer_text_en}<button onClick="answerEditEN(\'${el.input_code}\');" style="margin-left:10px;">수정</button></td>
+                    <td>${el.answer_text_ko}<button onClick="answerEditKO(\'${el._id}\');" style="margin-left:10px;">수정</button></td>
+                    <td>${el.answer_text_en}<button onClick="answerEditEN(\'${el._id}\');" style="margin-left:10px;">수정</button></td>
                     <td><button onClick="answerDelete(\'${el._id}\');">삭제</button></td>
                 </tr>`
 
@@ -282,6 +285,7 @@ function answerEditKO(input_code){
     })
     .fail(function(fail){
         alert(fail);
+        console.log(fail);
     })
 }  
 
@@ -302,6 +306,7 @@ function answerEditEN(input_code){
     })
     .fail(function(fail){
         alert(fail);
+        console.log(fail);
     })
 }  
 
