@@ -57,7 +57,7 @@ button{border: none; cursor: pointer;}
 .content .ymd{text-align: center;}
 .content .other_id{margin-left: 15px;}
 .content .my_id{text-align: right; margin-right: 15px;}
-.content .mach_id{background: url("../img/new_chatbotbird_L.png") 0px 50% no-repeat;display: inline-block;width: 35px; height: 35px;background-position: 0px 8px;background-size: contain;border-radius: 50px;background-color:#f6e58d;position: absolute; top: 0px; left:0px;}
+.content .mach_id{background: url("../img/new_chatbotbird_L.png") 0px 50% no-repeat;display: inline-block;width: 35px; height: 35px;background-position: 0px 8px;background-size: contain;border-radius: 50px;background-color:#f6e58d;border: 1.5px solid #f6e58d;position: absolute; top: 0px; left:0px;}
 .content .other_speech p{margin-right: 60px; margin-left: 15px; border: 1px solid #d9d9d9;}
 .content .bubble{font-size: 18px;position: relative;}
 .content .bot_name {display: block;font-size:12px;font-weight: bold;}
