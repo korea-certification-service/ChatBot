@@ -155,20 +155,20 @@
             if(typeof text === "object" && text.length > 1 ) { 
                 //DB에서 넘어온 답변데이터가 배열일때
                 var userChat = '<div class="chat-wrap">'+
-                                    (function(){
-                                        var chat = "";
-                                        for(var i = 0, max = text.length; i < max; i++){
-                                            chat += '<div class="bubble '+foo_speech+'">'+
-                                                        '<em class="'+foo_id+'"></em>'+
-                                                        '<div class="name_chat_wrap">'+
-                                                            '<span class="bot_name">마하봇</span>'+
-                                                            '<p>'+text[i]+'</p>'+
-                                                        '</div>'+
-                                                        '<span class="chat_time">'+regDate()+'</span>'+
-                                                    '</div>';
-                                        }
-                                        return chat;
-                                    })();
+                                    '<div class="bubble '+foo_speech+'">'+
+                                        '<em class="'+foo_id+' arr_mach_photo"></em>'+
+                                        '<div class="name_chat_wrap arr_answer">'+
+                                            '<span class="bot_name">마하봇</span>'+
+                                            (function(){
+                                                var chat = "";
+                                                for(var i = 0, max = text.length; i < max; i++){
+                                                    chat += '<p>'+text[i]+'</p>';          
+                                                }
+                                                return chat;
+                                            })() +
+                                        '</div>'+
+                                        '<span class="chat_time">'+regDate()+'</span>'+
+                                    '</div>'+
                                 '</div>'
 
                 $content.append(userChat);

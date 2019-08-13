@@ -57,29 +57,33 @@ button{border: none; cursor: pointer;}
 .content .ymd{text-align: center;}
 .content .other_id{margin-left: 15px;}
 .content .my_id{text-align: right; margin-right: 15px;}
-.content .mach_id{background: url("../img/chatbotbird_L.png") 0px 50% no-repeat;display: inline-block;width: 35px; height: 35px;margin-right:10px;background-position: 0px 8px;background-size: contain;border-radius: 50px;background-color:#a29bfe;position: relative; top: -13px;}
+.content .mach_id{background: url("../img/chatbotbird_L.png") 0px 50% no-repeat;display: inline-block;width: 35px; height: 35px;background-position: 0px 8px;background-size: contain;border-radius: 50px;background-color:#a29bfe;position: absolute; top: 0px; left:0px;}
 .content .other_speech p{margin-right: 60px; margin-left: 15px; border: 1px solid #d9d9d9;}
 .content .bubble{font-size: 18px;position: relative;}
 .content .bot_name {display: block;font-size:12px;font-weight: bold;}
-.content .bubble p{position: relative; margin-top: 4px; display: inline-block; padding: 15px 15px; font-size: 14px; border-radius: 30px;}
+.content .bubble p{position: relative;max-width: 250px; margin-top: 4px;padding: 10px 15px; font-size: 14px; border-radius: 30px;}
+.content .bubble .arr_mach_photo {top: 57%; transform: translateY(-50%);}
 .content .bubble .name_chat_wrap {display: inline-block;}
+.content .bubble .arr_answer p:nth-of-type(1) {border-radius: 15px 15px 15px 3px / 15px 15px 15px 3px}
+.content .bubble .arr_answer p {border-radius: 3px 15px 15px 3px / 3px 15px 15px 3px}
+.content .bubble .arr_answer p:last-child {border-radius: 3px 15px 15px 15px / 3px 15px 15px 15px}
 .content .bubble .chat_time{position: absolute; bottom: 0; font-size: 10px;color:#7f8c8d;font-weight: 600;}
 .content .my_speech{text-align: right;}
-.content .my_speech p{margin-left: 55px; background: #74b9ff;color: #fff;border-radius: 15px 15px 3px 15px / 15px 15px 3px 15px}
-.content .mach_speech{background: url("/img/ico_chatbot.png") 15px 50% no-repeat; background-size: 51px 39px; }
-.content .mach_speech p{margin-right: 5px; background-color: #dfe6e9; color: #000;border-radius: 3px 15px 15px 15px / 3px 15px 15px 15px}
+.content .my_speech p{margin-left: 55px;display: inline-block;background: #74b9ff;color: #fff;border-radius: 15px 15px 3px 15px / 15px 15px 3px 15px}
+.content .mach_speech{position: relative; padding-left: 45px; background: url("/img/ico_chatbot.png") 15px 50% no-repeat; background-size: 51px 39px; }
+.content .mach_speech p{margin-right: 5px;background-color: #f1f2f6; color: #000;border-radius: 3px 15px 15px 15px / 3px 15px 15px 15px}
 .content .other_speech .chat_time{right: -50px;}
 
 .curtain {display:none;width: 100%; height: 100%; position: absolute; top:0; left:0; background-color: #000; opacity: 0.5;}
 
 .footer{height: 70px; position: relative;padding-top:7px;background-color: #fff;box-shadow: 0px 0px 3px 1px rgb(0,0,0,0.1);}
 .footer .btn_sharp{font-size: 28px;}
-.footer .ipt_chat{float: left; margin-top: 5.5px; margin-left: 25px; width: calc(100% - 150px); height: 30px; font-size: 18px; border: none; ime-mode: active;}
+.footer .ipt_chat{float: left; margin-top: 5.5px;width: calc(100% - 150px); height: 30px; font-size: 18px; border: none; ime-mode: active;}
 .footer .ipt_chat::placeholder {color:#74b9ff;}
-.footer .btn_send{float: right; margin-right: 20px; width: 60px; height: 38px; font-weight: 600; color: #fff;border-radius: 5px; font-size: 18px;background-color: #dfe6e9;}
+.footer .btn_send{float: right;width: 60px; height: 38px; font-weight: 600; color: #fff;border-radius: 5px; font-size: 18px;background-color: #dfe6e9;}
 .footer .btn_at{float: left; margin-top: 4px; margin-left: 15px; width: 30px; height: 30px;background-color: transparent;font-size: 20px;color: #9c9c9c;cursor: default;}
 .footer .btn_emoji{font-size: 30px; line-height: 30px;}
-.footer .msg_sec{margin: 0 10px; padding: 7px 0;box-sizing: border-box; font-size: 0;}
+.footer .msg_sec{margin: 0 20px; padding: 7px 0;box-sizing: border-box; font-size: 0;}
 .footer .util_sec{float: left;}
 .footer .util_sec button{vertical-align: middle;}
 
