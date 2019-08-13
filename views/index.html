@@ -22,7 +22,7 @@
             <div class="msg_sec cf">
                 <!-- <button class="btn_at" id="btnAt"><i class="fas fa-paper-plane"></i></button> -->
                 <input type="text" class="ipt_chat" id="iptChat" autocomplete="off">
-                <button class="btn_send" id="btnSend"><i class="fas fa-paper-plane"></i></button>
+                <button class="btn_send" id="btnSend"><i class="fas fa-envelope"></i></button>
             </div>
             <div class="at_sec" id="atSec">
                 <div class="mach_command machCmd" id="mach_command01"></div>
@@ -53,15 +53,19 @@
     }).done(function(res) {
         country_code = res.data.country || "KR";
         if(country_code === "KR") {
-            addChat("Chatbot","mach_id", "mach_speech", greetings.ko);
+
+            addChat("Chatbot","mach_id", "mach_speech", greetings.ko, "greeting");
             $iptChat.attr("placeholder", "무엇을 도와드릴까요?");
-            $("#mach_command01").text("MACH가 무슨 뜻이죠?");
-            $("#mach_command02").text("자주 묻는 질문과 답변");
+            // $("#mach_command01").text("MACH가 무슨 뜻이죠?");
+            // $("#mach_command02").text("자주 묻는 질문과 답변");
+
         } else if(country_code === "EN") {
-            addChat("Chatbot","mach_id", "mach_speech", greetings.en);
-            $iptChat.attr("placeholder", "input your text here");
-            $("#mach_command01").text("What is MACH?");
-            $("#mach_command02").text("FAQ");
+
+            addChat("Chatbot","mach_id", "mach_speech", greetings.en, "greeting");
+            $iptChat.attr("placeholder", "How can I help you?");
+            // $("#mach_command01").text("What is MACH?");
+            // $("#mach_command02").text("FAQ");
+
         }
     }).fail(function(fail) {
         console.log(fail)
@@ -71,12 +75,16 @@
 
     $btnSend.on("click", function(e) {
 
+        var val = $iptChat.val();
+
         if(disabledBtn) {
             return;
         }
 
         
-        call();
+        addChat("","my_id", "my_speech", val);
+        addChat("Chatbot","mach_id", "mach_speech", val);
+        
         $iptChat.val("");
 
         $btnSend
@@ -84,6 +92,9 @@
         disabledBtn = true;
     });
     $iptChat.bind("keypress input", function(e) {
+
+        var val = $iptChat.val();
+
         if(e.type === "input") {
             var widthoutVoid = $iptChat.val().replace(/\s/gi,"");
 
@@ -94,7 +105,7 @@
 
             } else if($iptChat.val() != ""){ //텍스트가 존재할때
 
-                $btnSend.css({backgroundColor: "#74b9ff",color: "#fff"})
+                $btnSend.css({backgroundColor: "#3886FF",color: "#fff"})
                 disabledBtn = false;
 
             }
@@ -104,7 +115,9 @@
                 return;
             }
 
-            call();
+            addChat("","my_id", "my_speech", val);
+            addChat("Chatbot","mach_id", "mach_speech", val);
+
             $iptChat.val("");
 
             $btnSend.css({backgroundColor: "#dfe4ea",color: "#fff"})
@@ -112,100 +125,132 @@
         }
     });
 
-    function call() {
-        var val = $iptChat.val();
+    function addChat(who, foo_id, foo_speech, text, greeting) {
 
-        addChat("","my_id", "my_speech", val);
-
-        $.ajax({
-            method: "POST",
-            url: "/logic",
-            data: {
-                "userText": val, 
-                "userId": userId, 
-                "loginToken": loginToken, 
-                "country": country_code
-            },
-            cache:false
-        }).done(function(data) {
-            var splitText = data.split("<br>")
-
-            addChat("Chatbot","mach_id", "mach_speech", splitText);//챗봇의 답변
-
-            $content.scrollTop($content[0].scrollHeight);
-
-        }).fail(function(fail) {
-            console.log(fail);
-        });
-    }
-    function addChat(who, foo_id, foo_speech, text) {
-
-        var isUrl = text[0].match(/^(file|gopher|news|nntp|telnet|https?|ftps?|sftp):\/\/([a-z0-9-]+\.)+[a-z0-9]{2,4}.*$/gi) != null;
         if(foo_speech == "my_speech") {
             //유저가 보낼 채팅
             var userChat = '<div class="chat-wrap">'+
-                                    // '<em class="'+foo_id+'">'+who+'</em>'+
-                                    '<div class="bubble '+foo_speech+'"><span class="chat_time">'+regDate()+'</span><p>'+text+'</p></div>'+
-                            '</div>'
+                                // '<em class="'+foo_id+'">'+who+'</em>'+
+                                '<div class="bubble '+foo_speech+'">'+
+                                    '<span class="chat_time">'+regDate()+'</span>'+
+                                    '<p>'+text+'</p>'+
+                                '</div>'+
+                            '</div>';
 
-            $content.append(userChat);
+            $content
+                .append(userChat)
+                .scrollTop($content[0].scrollHeight);
 
         } else {
             //챗봇이 보낼 채팅
-            if(typeof text === "object" && text.length > 1 ) { 
-                //DB에서 넘어온 답변데이터가 배열일때
+            if(greeting == "greeting") {
+                //첫 인삿말
                 var userChat = '<div class="chat-wrap">'+
-                                    '<div class="bubble '+foo_speech+'">'+
+                                '<div class="bubble '+foo_speech+'">'+
+                                    '<em class="'+foo_id+'"></em>'+
+                                    '<div class="name_chat_wrap">'+
+                                        '<span class="bot_name">마하봇</span>'+
+                                        '<p>'+text+'</p>'+
+                                    '</div>'+
+                                    '<span class="chat_time">'+regDate()+'</span>'+
+                                '</div>'+
+                            '</div>';
+
+                $content
+                    .append(userChat)
+                    .scrollTop($content[0].scrollHeight);;
+            } else {
+                //답변
+                var userChat = '<div class="chat-wrap">'+
+                                    '<div class="bubble '+foo_speech+' thinking">'+
+                                        '<em class="'+foo_id+'"></em>'+
+                                        '<div class="name_chat_wrap">'+
+                                            '<span class="bot_name">마하봇</span>'+
+                                            '<p>생각중...</p>'+
+                                        '</div>'+
+                                        '<span class="chat_time">'+regDate()+'</span>'+
+                                    '</div>'+
+                                '</div>';
+
+                $content
+                    .append(userChat)
+                    .scrollTop($content[0].scrollHeight);;
+                
+                var $oldEl = $(".thinking");
+
+                $.ajax({
+                    method: "POST",
+                    url: "/logic",
+                    data: {
+                        "userText": text, 
+                        "userId": userId, 
+                        "loginToken": loginToken, 
+                        "country": country_code
+                    },
+                    cache:false
+                }).done(function(data) {
+
+                    var textArray = data.split("<br>");
+                    var isUrl = textArray[0].match(/^(file|gopher|news|nntp|telnet|https?|ftps?|sftp):\/\/([a-z0-9-]+\.)+[a-z0-9]{2,4}.*$/gi) != null;
+                    
+                    if(textArray.length > 1 ) { 
+                        //DB에서 넘어온 답변데이터가 복수의 채팅박스를 필요로할때
+                        var newEl = '<div class="bubble '+foo_speech+'">'+
                                         '<em class="'+foo_id+' arr_mach_photo"></em>'+
-                                        '<div class="name_chat_wrap arr_answer">'+
+                                        '<div class="name_chat_wrap arr_answer ">'+
                                             '<span class="bot_name">마하봇</span>'+
                                             (function(){
                                                 var chat = "";
-                                                for(var i = 0, max = text.length; i < max; i++){
-                                                    chat += '<p>'+text[i]+'</p>';          
+                                                for(var i = 0, max = textArray.length; i < max; i++){
+                                                    chat += '<p>'+textArray[i]+'</p>';          
                                                 }
                                                 return chat;
                                             })() +
                                         '</div>'+
                                         '<span class="chat_time">'+regDate()+'</span>'+
-                                    '</div>'+
-                                '</div>'
+                                    '</div>';
 
-                $content.append(userChat);
+                        $oldEl.replaceWith(newEl)
+                        $content.scrollTop($content[0].scrollHeight);
 
-            } else if(typeof text === "string" && isUrl == false || (typeof text === "object" && text.length === 1 && isUrl == false) ) {
-                //DB에서 넘어온 답변데이터가 문자열일때
-                var userChat = '<div class="chat-wrap">'+
-                                    '<div class="bubble '+foo_speech+'">'+
+                    } else if(textArray.length === 1 && isUrl == false) {
+                        //DB에서 넘어온 답변데이터가 단일 채팅박스를 필요로할때
+                        var newEl = '<div class="bubble '+foo_speech+'">'+
                                         '<em class="'+foo_id+'"></em>'+
                                         '<div class="name_chat_wrap">'+
                                             '<span class="bot_name">마하봇</span>'+
-                                            '<p>'+text+'</p>'+
+                                            '<p>'+textArray+'</p>'+
                                         '</div>'+
                                         '<span class="chat_time">'+regDate()+'</span>'+
-                                    '</div>'+
-                                '</div>'
+                                    '</div>';
+                                    
+                        $oldEl.replaceWith(newEl)
+                        $content.scrollTop($content[0].scrollHeight);
 
-                $content.append(userChat);
-
-            } else if(isUrl == true) {
-                //DB에서 넘어온 답변데이터가 url형식의 문자열일때
-                var userChat = '<div class="chat-wrap">'+
-                                    '<div class="bubble '+foo_speech+'">'+
+                    } else if(isUrl == true) {
+                        //DB에서 넘어온 답변데이터가 url형식의 링크를 포함할때
+                        var newEl = '<div class="bubble '+foo_speech+'">'+
                                         '<em class="'+foo_id+'"></em>'+
                                         '<div class="name_chat_wrap">'+
                                             '<span class="bot_name">마하봇</span>'+
-                                            '<p><a href="'+text+'" target="_blank">'+text+'</a></p>'+
+                                            '<p>'+
+                                                '<a href="'+textArray+'" target="_blank">'+textArray+'</a>'+
+                                            '</p>'+
                                         '</div>'+
                                         '<span class="chat_time">'+regDate()+'</span>'+
-                                    '</div>'+
-                                '</div>'
+                                    '</div>';
 
-                $content.append(userChat);
+                        $oldEl.replaceWith(newEl)
+                        $content.scrollTop($content[0].scrollHeight);
+                    }
+
+
+                }).fail(function(fail) {
+                    console.log(fail);
+                });
             }
 
         }
-
 
     }
     function addTimeBox() {
