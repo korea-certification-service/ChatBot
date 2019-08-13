@@ -83,21 +83,21 @@ button {
             <legend>
                 <h2>답변 추가하기</h2>
             </legend>
-            <form>
-                <div class="ans_input_code">
-                    <h3>답변 할 질의 코드(input_code)</h3>
-                    <input type="text" id="InputCode">
-                </div>
-                <div class="ans_text">
-                    <h3>답변(answer_text_ko)</h3>
-                    <textarea id="answerTextKo" style="resize:none;"></textarea>
-                </div>
-                <div class="ans_text">
-                    <h3>답변(answer_text_en)</h3>
-                    <textarea id="answerTextEn" style="resize:none;"></textarea>
-                </div>
-                <button id="addAnswer">답변생성</button>
-            </form>
+
+            <div class="ans_input_code">
+                <h3>답변 할 질의 코드(input_code)</h3>
+                <input type="text" id="InputCode">
+            </div>
+            <div class="ans_text">
+                <h3>답변(answer_text_ko)</h3>
+                <textarea id="answerTextKo" style="resize:none;"></textarea>
+            </div>
+            <div class="ans_text">
+                <h3>답변(answer_text_en)</h3>
+                <textarea id="answerTextEn" style="resize:none;"></textarea>
+            </div>
+            <button id="addAnswer">답변생성</button>
+
        </fieldset>
 
        <fieldset id="sentence">
@@ -175,6 +175,7 @@ $.ajax({
     });
 })
 .fail(function(fail){
+    alert("실패");
     console.log(fail);
 });
 
@@ -198,6 +199,7 @@ $.ajax({
     console.log(data);
 })
 .fail(function(fail){
+    alert("실패");
     console.log(fail);
 });
 
@@ -219,8 +221,10 @@ $("#addAnswer").on("click", function(){
     })
     .done(function(data) {
         console.log(data);
+        location.reload();
     })
     .fail(function(fail){
+        alert("실패");
         console.log(fail);
     });
 
@@ -243,7 +247,8 @@ function sentenceEdit(_id){
         location.reload();
     })
     .fail(function(fail){
-        alert(fail);
+        alert("실패");
+        console.log(fail);
     })
 } 
 
@@ -263,7 +268,8 @@ function sentenceDelete(_id){
         location.reload();
     })
     .fail(function(fail){
-        alert(fail);
+        alert("실패");
+        console.log(fail);
     })
 }  
 
@@ -284,7 +290,7 @@ function answerEditKO(_id){
         location.reload();
     })
     .fail(function(fail){
-        alert(fail);
+        alert("실패");
         console.log(fail);
     })
 }  
@@ -305,7 +311,7 @@ function answerEditEN(_id){
         location.reload();
     })
     .fail(function(fail){
-        alert(fail);
+        alert("실패");
         console.log(fail);
     })
 }  

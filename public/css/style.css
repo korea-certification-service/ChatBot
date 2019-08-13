@@ -13,8 +13,8 @@
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(238, 238, 238, 0.452);
-    opacity: 0.7;
+    background-color: rgba(204, 204, 204, 0.452);
+    opacity: 1;
 }
 ::-webkit-scrollbar-track {
     background: none;
@@ -56,27 +56,26 @@ button{border: none; cursor: pointer;}
 .content .ymd{text-align: center;}
 .content .other_id{margin-left: 15px;}
 .content .my_id{text-align: right; margin-right: 15px;}
-.content .mach_id{padding-left: 50px; background: url("../img/chatbotbird_L.png") 0px 50% no-repeat;display: inline-block;height: 30px;line-height: 30px;background-size: contain;}
+.content .mach_id{background: url("../img/chatbotbird_L.png") 0px 50% no-repeat;display: inline-block;width: 35px; height: 35px;margin-right:10px;background-position: 0px 10px;background-size: contain;border-radius: 50px;background-color:#f1f2f6;}
 .content .other_speech > p{margin-right: 60px; margin-left: 15px; border: 1px solid #d9d9d9;}
-.content .my_speech{text-align: right;}
-.content .my_speech > p{margin-right: 15px; margin-left: 60px; background: linear-gradient(45deg, #8b7ff3, #00e8b8);color: #fff; font-weight: 700;}
-.content .mach_speech{padding-left: 50px; background: url("/img/ico_chatbot.png") 15px 50% no-repeat; background-size: 51px 39px; }
-.content .mach_speech > p{margin-right: 15px;font-weight: 700; border: 1.5px solid #ddd; background-color: #fff; color: #000;}
-.content .bubble{font-size: 18px;}
+.content .bubble{font-size: 18px;position: relative;}
 .content .bubble > p{position: relative; margin-top: 8px; display: inline-block; padding: 15px 15px; font-size: 14px; border-radius: 30px;}
-.content .bubble .chat_time{position: absolute; bottom: 0; font-size: 11px;}
+.content .bubble .chat_time{position: absolute; bottom: 0; font-size: 10px;color:#7f8c8d;font-weight: 600;}
+.content .my_speech{text-align: right;}
+.content .my_speech > p{margin-left: 50px; background: #2cb0ea;color: #fff;border-radius: 30px 30px 5px 30px / 30px 30px 5px 30px}
+.content .mach_speech{background: url("/img/ico_chatbot.png") 15px 50% no-repeat; background-size: 51px 39px; }
+.content .mach_speech > p{margin-right: 5px; background-color: #f1f2f6; color: #000;border-radius: 5px 30px 30px 30px / 5px 30px 30px 30px}
 .content .other_speech .chat_time{right: -50px;}
-.content .my_speech .chat_time{left: -50px;}
 
 .curtain {display:none;width: 100%; height: 100%; position: absolute; top:0; left:0; background-color: #000; opacity: 0.5;}
 
-.footer{height: 70px; position: relative;padding-top:7px;background-color: #fff;}
+.footer{height: 70px; position: relative;padding-top:7px;background-color: #fff;box-shadow: 0px 0px 3px 1px rgb(0,0,0,0.1);}
 .footer .btn_sharp{font-size: 28px;}
 .footer .ipt_chat{float: left; margin-top: 5.5px; margin-left: 25px; width: calc(100% - 150px); height: 30px; font-size: 18px; border: none; ime-mode: active;}
 .footer .btn_send{float: right; margin-right: 20px; width: 60px; height: 38px; font-weight: 600; color: #9c9c9c; border: 1.5px solid #9c9c9c; border-radius: 5px; font-size: 18px;background-color: #fff;}
 .footer .btn_at{float: left; margin-top: 4px; margin-left: 15px; width: 30px; height: 30px;background-color: transparent;font-size: 20px;color: #9c9c9c;cursor: default;}
 .footer .btn_emoji{font-size: 30px; line-height: 30px;}
-.footer .msg_sec{margin: 0 10px; padding: 7px 0; height: 55px; box-sizing: border-box; font-size: 0; border: 1.5px solid #ddd; border-radius: 30px;}
+.footer .msg_sec{margin: 0 10px; padding: 7px 0;box-sizing: border-box; font-size: 0;}
 .footer .util_sec{float: left;}
 .footer .util_sec button{vertical-align: middle;}
 
@@ -91,3 +90,41 @@ button{border: none; cursor: pointer;}
 .footer .at_sec .mach_command{height: 45px; line-height: 45px; font-size: 15px;font-weight: 500; color:#e60012; border-radius: 30px; border: 1.5px solid #e60012; cursor: pointer;margin-bottom: 15px;}
 .footer .at_sec .mach_command:last-child{margin-bottom: 0px;}
 .chat_dim{display: none; position: absolute; z-index: 1; top: 0; left: 0; background: rgba(0, 0, 0, 0.7); width: 100%; height: calc(100% - 70px);}
+
+
+.chat-wrap {
+    margin-bottom: 10px;
+}
+.reg_date {
+    position: relative;
+    margin-bottom: 20px;
+}
+.reg_date::before {
+    content:"";
+    display: inline-block;
+    width: 33%;
+    height: 1px;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #a4b0be;
+}
+.reg_date::after {
+    content:"";
+    display: inline-block;
+    width: 33%;
+    height: 1px;
+    position: absolute;
+    right:0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #a4b0be;
+}
+.reg_date > p {
+    text-align: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #666;
+    font-size: 12px;
+}
