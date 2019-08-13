@@ -22,7 +22,7 @@
             <div class="msg_sec cf">
                 <!-- <button class="btn_at" id="btnAt"><i class="fas fa-paper-plane"></i></button> -->
                 <input type="text" class="ipt_chat" id="iptChat" autocomplete="off">
-                <button class="btn_send" id="btnSend">Send</button>
+                <button class="btn_send" id="btnSend"><i class="fas fa-paper-plane"></i></button>
             </div>
             <div class="at_sec" id="atSec">
                 <div class="mach_command machCmd" id="mach_command01"></div>
@@ -54,7 +54,7 @@
         country_code = res.data.country || "KR";
         if(country_code === "KR") {
             addChat("Chatbot","mach_id", "mach_speech", greetings.ko);
-            $iptChat.attr("placeholder", "메세지를 입력하세요.");
+            $iptChat.attr("placeholder", "무엇을 도와드릴까요?");
             $("#mach_command01").text("MACH가 무슨 뜻이죠?");
             $("#mach_command02").text("자주 묻는 질문과 답변");
         } else if(country_code === "EN") {
@@ -80,7 +80,7 @@
         $iptChat.val("");
 
         $btnSend
-        .css({backgroundColor: "#fff",color: "#9c9c9c", border: "1.5px solid #9c9c9c"})
+        .css({backgroundColor: "#dfe4ea",color: "#fff"})
         disabledBtn = true;
     });
     $iptChat.bind("keypress input", function(e) {
@@ -89,12 +89,12 @@
 
             if($iptChat.val() == ""|| widthoutVoid == "") { //텍스트가 없거나 공백만 있을때
 
-                $btnSend.css({backgroundColor: "#fff",color: "#9c9c9c", border: "1.5px solid #9c9c9c"})
+                $btnSend.css({backgroundColor: "#dfe4ea",color: "#fff"})
                 disabledBtn = true;
 
             } else if($iptChat.val() != ""){ //텍스트가 존재할때
 
-                $btnSend.css({backgroundColor: "#54a0ff",color: "#fff", border: "none"})
+                $btnSend.css({backgroundColor: "#54a0ff",color: "#fff"})
                 disabledBtn = false;
 
             }
@@ -107,7 +107,7 @@
             call();
             $iptChat.val("");
 
-            $btnSend.css({backgroundColor: "#fff",color: "#9c9c9c", border: "1.5px solid #9c9c9c"})
+            $btnSend.css({backgroundColor: "#dfe4ea",color: "#fff"})
             disabledBtn = true;
         }
     });
@@ -158,7 +158,14 @@
                                     (function(){
                                         var chat = "";
                                         for(var i = 0, max = text.length; i < max; i++){
-                                            chat += '<div class="bubble '+foo_speech+'"><em class="'+foo_id+'"></em><p>'+text[i]+'</p><span class="chat_time">'+regDate()+'</span></div>';
+                                            chat += '<div class="bubble '+foo_speech+'">'+
+                                                        '<em class="'+foo_id+'"></em>'+
+                                                        '<div class="name_chat_wrap">'+
+                                                            '<span class="bot_name">마하봇</span>'+
+                                                            '<p>'+text[i]+'</p>'+
+                                                        '</div>'+
+                                                        '<span class="chat_time">'+regDate()+'</span>'+
+                                                    '</div>';
                                         }
                                         return chat;
                                     })();
@@ -169,7 +176,14 @@
             } else if(typeof text === "string" && isUrl == false || (typeof text === "object" && text.length === 1 && isUrl == false) ) {
                 //DB에서 넘어온 답변데이터가 문자열일때
                 var userChat = '<div class="chat-wrap">'+
-                                    '<div class="bubble '+foo_speech+'"><em class="'+foo_id+'"></em><p>'+text+'</p><span class="chat_time">'+regDate()+'</span></div>'+
+                                    '<div class="bubble '+foo_speech+'">'+
+                                        '<em class="'+foo_id+'"></em>'+
+                                        '<div class="name_chat_wrap">'+
+                                            '<span class="bot_name">마하봇</span>'+
+                                            '<p>'+text+'</p>'+
+                                        '</div>'+
+                                        '<span class="chat_time">'+regDate()+'</span>'+
+                                    '</div>'+
                                 '</div>'
 
                 $content.append(userChat);
@@ -177,7 +191,14 @@
             } else if(isUrl == true) {
                 //DB에서 넘어온 답변데이터가 url형식의 문자열일때
                 var userChat = '<div class="chat-wrap">'+
-                                    '<div class="bubble '+foo_speech+'"><em class="'+foo_id+'"></em><p><a href="'+text+'" target="_blank">'+text+'</a></p><span class="chat_time">'+regDate()+'</span></div>'+
+                                    '<div class="bubble '+foo_speech+'">'+
+                                        '<em class="'+foo_id+'"></em>'+
+                                        '<div class="name_chat_wrap">'+
+                                            '<span class="bot_name">마하봇</span>'+
+                                            '<p><a href="'+text+'" target="_blank">'+text+'</a></p>'+
+                                        '</div>'+
+                                        '<span class="chat_time">'+regDate()+'</span>'+
+                                    '</div>'+
                                 '</div>'
 
                 $content.append(userChat);
@@ -207,8 +228,7 @@
         var date =  new Date();
 
         var hours = date.getHours();
-        var minutes = date.getMinutes().length < 10 ? "0"+date.getMinutes() : date.getMinutes();
-        console.log(minutes);
+        var minutes = date.getMinutes() < 10 ? "0"+date.getMinutes() : date.getMinutes();
 
         if(hours > 12){
             var fixHours = hours - 12;
