@@ -202,7 +202,7 @@
                                             (function(){
                                                 var chat = "";
                                                 for(var i = 0, max = textArray.length; i < max; i++){
-                                                    chat += '<p>'+textArray[i]+'</p>';          
+                                                    chat += '<p>'+textArray[i]+'</p>'+(i == max -1 ? '':'<br>');          
                                                 }
                                                 return chat;
                                             })() +
