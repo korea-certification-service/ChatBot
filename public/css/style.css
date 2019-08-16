@@ -58,19 +58,19 @@ button{border: none; cursor: pointer;}
 .content .other_id{margin-left: 15px;}
 .content .my_id{text-align: right; margin-right: 15px;}
 .content .mach_id{background: url("../img/new_chatbotbird_L.png") 0px 50% no-repeat;display: inline-block;width: 35px; height: 35px;background-position: 0px 8px;background-size: contain;border-radius: 50px;background-color:#fff200; position: absolute; top: 0px; left:0px;}
+.content .mach_id.position {top: 50%; transform: translateY(-50%);}
 .content .other_speech p{margin-right: 60px; margin-left: 15px; border: 1px solid #d9d9d9;}
 .content .bubble{font-size: 18px;position: relative;}
 .content .bot_name {display: block;font-size:12px;font-weight: bold;}
 .content .bubble p{position: relative;max-width: 250px;display: inline-block; margin-top: 4px;padding: 10px 15px; font-size: 12px; border-radius: 30px;}
-.content .bubble .arr_mach_photo {top: 50%; transform: translateY(-50%);}
-.content .bubble .arr_answer p:nth-of-type(1) {border-radius: 20px 20px 20px 0px / 20px 20px 20px 0px}
-.content .bubble .arr_answer p {border-radius: 0px 20px 20px 0px / 0px 20px 20px 0px}
-.content .bubble .arr_answer p:last-child {border-radius: 0px 20px 20px 20px / 0px 20px 20px 20px}
+.content .bubble .name_chat_wrap p:nth-of-type(1) {border-radius: 20px 20px 20px 0px / 20px 20px 20px 0px}
+.content .bubble .name_chat_wrap p {border-radius: 0px 20px 20px 0px / 0px 20px 20px 0px}
+.content .bubble .name_chat_wrap p:last-child {border-radius: 0px 20px 20px 20px / 0px 20px 20px 20px}
 .content .bubble .chat_time{font-size: 10px;color:#7f8c8d;}
 .content .my_speech{text-align: right;}
 .content .my_speech p{display: inline-block; margin-left: 55px; background: #3886FF;color: #fff;border-radius: 20px 0px 20px 20px / 20px 0px 20px 20px;}
 .content .mach_speech{position: relative; padding-left: 45px; background: url("/img/ico_chatbot.png") 15px 50% no-repeat; background-size: 51px 39px; }
-.content .mach_speech p{margin-right: 5px;background-color: #dfe6e9; color: #000;border-radius: 0px 20px 20px 20px / 0px 20px 20px 20px; font-weight: bold;}
+.content .mach_speech p{margin-right: 5px;background-color: #dfe6e9; color: #000;border-radius: 0px 20px 20px 20px / 0px 20px 20px 20px;font-weight: bold;}
 .content .other_speech .chat_time{right: -50px;}
 
 .curtain {display:none;width: 100%; height: 100%; position: absolute; top:0; left:0; background-color: #000; opacity: 0.5;}

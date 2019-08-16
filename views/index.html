@@ -29,11 +29,10 @@
             </div>
         </footer>
     </div>  
-<script src="js/custom.js"></script>
 <script>
     var userId = "<%=userId%>";
     var loginToken = "<%=loginToken%>";
-    var MarketMach_uri = "<%=MarketMach_uri%>";
+    var MarketMach_uri = "<%=MarketMach_uri%>";//마켓마하 API호출에 필요한 도메인주소
     var $content = $("#content");
     var $iptChat = $("#iptChat");
     var $btnSend = $("#btnSend");
@@ -41,260 +40,314 @@
     var country_code;
     var disabledBtn = true;
 
-    var greetings = {
-        ko: "안녕하세요~",
-        en: "Hello"
-    }
+    //현재 날짜를 출력
+    printNowDate();
 
-    $.ajax({
-        method: "GET",
-        url: MarketMach_uri+"/v1/users/"+userId,
-    }).done(function(res) {
-        country_code = res.data.country || "KR";
-        if(country_code === "KR") {
-
-            addChat("Chatbot","mach_id", "mach_speech", greetings.ko, "greeting");
-            $iptChat.attr("placeholder", "무엇을 도와드릴까요?");
-            // $("#mach_command01").text("MACH가 무슨 뜻이죠?");
-            // $("#mach_command02").text("자주 묻는 질문과 답변");
-
-        } else if(country_code === "EN") {
-
-            addChat("Chatbot","mach_id", "mach_speech", greetings.en, "greeting");
-            $iptChat.attr("placeholder", "How can I help you?");
-            // $("#mach_command01").text("What is MACH?");
-            // $("#mach_command02").text("FAQ");
-
-        }
-    }).fail(function(fail) {
-        console.log(fail)
-    })
-
-    addTimeBox();
+    //인사말 출력
+    printChatbotChattingBox({
+        userId: userId, 
+        loginToken: loginToken, 
+        country_code: country_code,
+        type: "greet"
+    });
 
     $btnSend.on("click", function(e) {
 
-        var val = $iptChat.val();
+        var userText = $iptChat.val();
 
         if(disabledBtn) {
             return;
         }
 
-        
-        addChat("","my_id", "my_speech", val);
-        addChat("Chatbot","mach_id", "mach_speech", val);
-        
-        $iptChat.val("");
+        //유저채팅 출력
+        printUserChattingBox(userText);
 
-        $btnSend
-        .css({backgroundColor: "#dfe4ea",color: "#fff"})
-        disabledBtn = true;
+        //챗봇의 답변 출력
+        printChatbotChattingBox({
+            userText: userText, 
+            userId: userId, 
+            loginToken: loginToken, 
+            country_code: country_code,
+            type: "answer"
+        });
+
+        buttonOnOff("off");
     });
+
     $iptChat.bind("keypress input", function(e) {
 
-        var val = $iptChat.val();
+        var userText = $iptChat.val();
 
         if(e.type === "input") {
-            var widthoutVoid = $iptChat.val().replace(/\s/gi,"");
+            //인풋 이벤트
 
-            if($iptChat.val() == ""|| widthoutVoid == "") { //텍스트가 없거나 공백만 있을때
+            var widthoutVoid = userText.replace(/\s/gi,"");
 
-                $btnSend.css({backgroundColor: "#dfe4ea",color: "#fff"})
-                disabledBtn = true;
+            if(userText == ""|| widthoutVoid == "") { 
+                //텍스트가 없거나 공백만 있을때
 
-            } else if($iptChat.val() != ""){ //텍스트가 존재할때
+                buttonOnOff("off");
 
-                $btnSend.css({backgroundColor: "#3886FF",color: "#fff"})
-                disabledBtn = false;
+            } else if(userText != ""){ 
+                //텍스트가 존재할때
+
+                buttonOnOff("on");
 
             }
 
         } else if(e.type === "keypress" && e.keyCode == 13) {
+            //키프레스 이벤트
+
             if(disabledBtn) {
                 return;
             }
 
-            addChat("","my_id", "my_speech", val);
-            addChat("Chatbot","mach_id", "mach_speech", val);
+            //유저채팅 출력
+            printUserChattingBox(userText);
 
-            $iptChat.val("");
+            //챗봇의 답변 출력
+            printChatbotChattingBox({
+                userText: userText, 
+                userId: userId, 
+                loginToken: loginToken, 
+                country_code: country_code,
+                type: "answer"
+            });
 
-            $btnSend.css({backgroundColor: "#dfe4ea",color: "#fff"})
-            disabledBtn = true;
+            buttonOnOff("off");
         }
     });
 
-    function addChat(who, foo_id, foo_speech, text, greeting) {
 
-        if(foo_speech == "my_speech") {
-            //유저가 보낼 채팅
-            var userChat = '<div class="chat-wrap">'+
-                                // '<em class="'+foo_id+'">'+who+'</em>'+
-                                '<div class="bubble '+foo_speech+'">'+
-                                    '<p>'+text+'</p>'+
-                                    '<br>'+
-                                    '<span class="chat_time">'+regDate()+'</span>'+
-                                '</div>'+
-                            '</div>';
+    /**
+     * ****************기능을 담당하는 함수****************
+     */
+    function printUserChattingBox(userText) {    
+        //유저채팅을 화면에 추가
+        $content.append(HTMLChattingBox({
+            foo_speech: "my_speech",
+            foo_id: "my_id",
+            text: userText
+        })).scrollTop($content[0].scrollHeight);
 
-            $content
-                .append(userChat)
-                .scrollTop($content[0].scrollHeight);
+        //인풋 value값 초기화
+        $iptChat.val("");
+    }
+    /**
+     * 챗봇의 채팅내용을 화면에 보여주는 함수
+     */
+    function printChatbotChattingBox(obj){ 
+        if(obj.type == "answer") {
+            //답변
+            $.ajax({
+                method: "POST",
+                url: "/logic",
+                data: {
+                    "userText": obj.userText, 
+                    "userId": obj.userId, 
+                    "loginToken": obj.loginToken, 
+                    "country": obj.country_code
+                },
+                cache:false,
+                success: function(success) {
+                    console.log("서버의 응답을 성공적으로 받았습니다.");
+                },
+                beforeSend: function() {
+                    //챗봇 답변을 로딩
+                    $content.append(HTMLChattingBox({
+                        foo_speech: "mach_speech",
+                        foo_id: "mach_id",
+                        text: "생각중...",
+                        status: "loading"
+                    })).scrollTop($content[0].scrollHeight);
+                },
+                complete: function(res) {
+                    //챗봇답변을 화면에 추가
+                    $(".loading").replaceWith(HTMLChattingBox({
+                        foo_speech: "mach_speech",
+                        foo_id: "mach_id",
+                        text: res.responseText
+                    }))
+                    $content.scrollTop($content[0].scrollHeight);
+                },
+                error: function(err) {
+                    console.log("서버의 응답을 받는데 실패하였습니다.");
+                }
+            });
+        } else if(obj.type == "greet") {
+            //인사말
+            $.ajax({
+                method: "GET",
+                url: MarketMach_uri+"/v1/users/"+obj.userId,
+                success:function(success) {
+                    console.log("서버의 응답을 성공적으로 받았습니다.");
+                },
+                beforeSend: function() {
 
-        } else {
-            //챗봇이 보낼 채팅
-            if(greeting == "greeting") {
-                //첫 인삿말
-                var userChat = '<div class="chat-wrap">'+
-                                '<div class="bubble '+foo_speech+'">'+
-                                    '<em class="'+foo_id+'"></em>'+
-                                    '<div class="name_chat_wrap">'+
-                                        '<span class="bot_name">마하봇</span>'+
-                                        '<p>'+text+'</p>'+
-                                    '</div>'+
-                                    '<span class="chat_time">'+regDate()+'</span>'+
-                                '</div>'+
-                            '</div>';
+                },
+                complete: function(res) {
+                    console.dir(res);
+                    country_code = res.responseJSON.data.country || "KR";
+                    if(country_code === "KR") {
 
-                $content
-                    .append(userChat)
-                    .scrollTop($content[0].scrollHeight);;
-            } else {
-                //답변
-                var userChat = '<div class="chat-wrap">'+
-                                    '<div class="bubble '+foo_speech+' thinking">'+
-                                        '<em class="'+foo_id+'"></em>'+
-                                        '<div class="name_chat_wrap">'+
-                                            '<span class="bot_name">마하봇</span>'+
-                                            '<p>생각중...</p>'+
-                                        '</div>'+
-                                        '<span class="chat_time">'+regDate()+'</span>'+
-                                    '</div>'+
-                                '</div>';
+                        $content.append(HTMLChattingBox({
+                                foo_speech: "mach_speech",
+                                foo_id: "mach_id",
+                                text: "안녕하세요~"
+                            })).scrollTop($content[0].scrollHeight);
 
-                $content
-                    .append(userChat)
-                    .scrollTop($content[0].scrollHeight);;
-                
-                var $oldEl = $(".thinking");
+                        $iptChat.attr("placeholder", "무엇을 도와드릴까요?");
 
-                $.ajax({
-                    method: "POST",
-                    url: "/logic",
-                    data: {
-                        "userText": text, 
-                        "userId": userId, 
-                        "loginToken": loginToken, 
-                        "country": country_code
-                    },
-                    cache:false
-                }).done(function(data) {
+                    } else if(country_code === "EN") {
 
-                    var textArray = data.split("<br>");
-                    var isUrl = textArray[0].match(/^(file|gopher|news|nntp|telnet|https?|ftps?|sftp):\/\/([a-z0-9-]+\.)+[a-z0-9]{2,4}.*$/gi) != null;
-                    
-                    if(textArray.length > 1 ) { 
-                        //DB에서 넘어온 답변데이터가 복수의 채팅박스를 필요로할때
-                        var newEl = '<div class="bubble '+foo_speech+'">'+
-                                        '<em class="'+foo_id+' arr_mach_photo"></em>'+
-                                        '<div class="name_chat_wrap arr_answer ">'+
-                                            '<span class="bot_name">마하봇</span>'+
-                                            (function(){
-                                                var chat = "";
-                                                for(var i = 0, max = textArray.length; i < max; i++){
-                                                    chat += '<p>'+textArray[i]+'</p>'+(i == max -1 ? '':'<br>');          
-                                                }
-                                                return chat;
-                                            })() +
-                                        '</div>'+
-                                        '<span class="chat_time">'+regDate()+'</span>'+
-                                    '</div>';
+                        $content.append(HTMLChattingBox({
+                                foo_speech: "mach_speech",
+                                foo_id: "mach_id",
+                                text: "Hello~"
+                            })).scrollTop($content[0].scrollHeight);
 
-                        $oldEl.replaceWith(newEl)
-                        $content.scrollTop($content[0].scrollHeight);
+                        $iptChat.attr("placeholder", "How can I help you?");
 
-                    } else if(textArray.length === 1 && isUrl == false) {
-                        //DB에서 넘어온 답변데이터가 단일 채팅박스를 필요로할때
-                        var newEl = '<div class="bubble '+foo_speech+'">'+
-                                        '<em class="'+foo_id+'"></em>'+
-                                        '<div class="name_chat_wrap">'+
-                                            '<span class="bot_name">마하봇</span>'+
-                                            '<p>'+textArray+'</p>'+
-                                        '</div>'+
-                                        '<span class="chat_time">'+regDate()+'</span>'+
-                                    '</div>';
-                                    
-                        $oldEl.replaceWith(newEl)
-                        $content.scrollTop($content[0].scrollHeight);
-
-                    } else if(isUrl == true) {
-                        //DB에서 넘어온 답변데이터가 url형식의 링크를 포함할때
-                        var newEl = '<div class="bubble '+foo_speech+'">'+
-                                        '<em class="'+foo_id+'"></em>'+
-                                        '<div class="name_chat_wrap">'+
-                                            '<span class="bot_name">마하봇</span>'+
-                                            '<p>'+
-                                                '<a href="'+textArray+'" target="_blank">'+textArray+'</a>'+
-                                            '</p>'+
-                                        '</div>'+
-                                        '<span class="chat_time">'+regDate()+'</span>'+
-                                    '</div>';
-
-                        $oldEl.replaceWith(newEl)
-                        $content.scrollTop($content[0].scrollHeight);
                     }
-
-
-                }).fail(function(fail) {
-                    console.log(fail);
-                });
-            }
-
+                },
+                error: function(err) {
+                    console.log("서버의 응답을 받는데 실패하였습니다.");
+                }
+            });
         }
 
     }
-    function addTimeBox() {
+    /**
+     * 현재날짜를 화면에 보여주는 함수 
+     */
+    function printNowDate() {
+        $content.append('<div class="reg_date"><p> '+nowDate()+' </p></div>');
+    }
+    /**
+     * 버튼 온/오프 스타일을 적용해주는 함수 
+     */
+    function buttonOnOff(onOff) {
+        if(onOff == "on") {
+            $btnSend.css({backgroundColor: "#3886FF",color: "#fff"})
+            disabledBtn = false;
+        } else {
+            $btnSend.css({backgroundColor: "#dfe4ea",color: "#fff"})
+            disabledBtn = true;
+        }
+    }
+
+    /**
+     * ****************특정 값을 리턴하는 함수****************
+     */
+    /**
+     * 리턴값이 문자열형태의 html태그
+     * 인자값으로 객체를 받음
+     *  => {
+     *  foo_speech : 클래스이름 ex) mach_speech,
+     *  foo_id: 클래스이름 ex) mach_id,
+     *  text: 출력시킬 문자
+     * }
+     */
+    function HTMLChattingBox(obj) {
+
+        var chattingBox = null;
+
+        if(obj.foo_speech == "my_speech") {
+            //유저채팅박스
+            chattingBox = '<div class="chat-wrap">'+
+                                '<div class="bubble '+obj.foo_speech+'">'+
+                                    '<p>'+obj.text+'</p>'+
+                                    '<br>'+
+                                    '<span class="chat_time">'+nowTime()+'</span>'+
+                                '</div>'+
+                            '</div>';
+
+        } else {
+            //챗봇채팅박스
+
+            //URL가공
+            var regExpUrl = /(file|gopher|news|nntp|telnet|https?|ftps?|sftp):\/\/([a-z0-9-]+\.)+[a-z0-9]{2,4}\/?/gi;
+            var arrayUrl = obj.text.match(regExpUrl);
+            if(arrayUrl != null) {
+                arrayUrl.forEach(function(url){
+                    obj.text = obj.text.replace(url,'<a href="'+url+'" target="_blank">'+url+'</a>');
+                });
+            }
+            //개행처리
+            obj.text = obj.text.split("<br>");
+
+            chattingBox = '<div class="chat-wrap '+(obj.status != undefined ? obj.status : "")+'" >'+
+                                '<div class="bubble '+obj.foo_speech+'">'+
+                                    '<em class="'+obj.foo_id+" "+(obj.text.length > 1 ? 'position' : '')+'"></em>'+
+                                    '<div class="name_chat_wrap">'+
+                                        '<span class="bot_name">마하봇</span>'+
+                                        (function(){
+                                            var txt = '';
+                                            for(var i = 0, max = obj.text.length; i < max; i++ ) {
+                                                txt += '<p>'+obj.text[i]+'</p>'+(i == obj.text.length - 1 ? '' : '<br>');
+                                            }
+                                            return txt;
+                                        })()+
+                                    '</div>'+
+                                    '<span class="chat_time">'+nowTime()+'</span>'+
+                                '</div>'+
+                            '</div>';
+
+        }
+        return chattingBox;
+    }
+    
+    /**
+     * 리턴값이 문자열 형태의 현재 날짜
+     */
+    function nowDate() {
         var dateObj = new Date();
         var weeks = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
 
         var year = dateObj.getFullYear();
         var month = dateObj.getMonth()+1;
-        var day = dateObj.getDay();
         var date = dateObj.getDate();
+
+        var day = dateObj.getDay();
         var week = weeks[day];
 
-        var todayText = year+"년 "+month+"월 "+date+"일 "+week;
+        var DateNow = year+"년 "+month+"월 "+date+"일 "+week;
 
-        var timeBox = '<div class="reg_date"><p> '+todayText+' </p></div>';
-
-        $content.append(timeBox);
+        return DateNow;
     }
-    function regDate() {
+
+    /**
+     * 리턴값이 문자열 형태의 현재 시각 
+     */
+    function nowTime() {
         var date =  new Date();
 
         var hours = date.getHours();
         var minutes = date.getMinutes() < 10 ? "0"+date.getMinutes() : date.getMinutes();
+        var timeNow = null;
 
         if(hours > 12){
             var fixHours = hours - 12;
 
             if(fixHours < 10){
-                return "0"+fixHours+":"+minutes+" 오후";
+                timeNow = "0"+fixHours+":"+minutes+" 오후";
             } else {
-                return fixHours+":"+minutes+" 오후";
+                timeNow = fixHours+":"+minutes+" 오후";
             };
             
         } else {
 
             if(hours < 10) {
-                return "0"+hours+":"+minutes+" 오전";
+                timeNow = "0"+hours+":"+minutes+" 오전";
             } else {
-                return hours+":"+minutes+" 오전";
+                timeNow = hours+":"+minutes+" 오전";
             }
             
         }
 
-    }
+        return timeNow;
+     }
+
 </script>
 </body>
 </html>
