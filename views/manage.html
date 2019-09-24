@@ -1,85 +1,100 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>temp chatbot manage</title>
-<meta charset="utf-8">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<style>
-* {
-    box-sizing: border-box;
-}
-table.type09 {
-    border-collapse: collapse;
-    text-align: left;
-    line-height: 1.5;
-    margin: 0 auto;
-}
-table.type09 thead th {
-    padding: 10px;
-    font-weight: bold;
-    vertical-align: top;
-    color: #369;
-    border-bottom: 3px solid #036;
-}
-table.type09 tbody th {
-    width: 150px;
-    padding: 10px;
-    font-weight: bold;
-    vertical-align: top;
-    border-bottom: 1px solid #ccc;
-    background: #f3f6f7;
-}
-table.type09 td {
-    width: 350px;
-    padding: 10px;
-    vertical-align: top;
-    border-bottom: 1px solid #ccc;
-}
-form {
-    width: 400px;
-    margin: 0 auto;
-}
-form > div > textarea{
-    height: 150px;
-}
-#InputCode {
-    width: 400px;
-}
-.ans_text {
-    width: 400px;
-}
+    <title>temp chatbot manage</title>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-.ans_text textarea{
-    width: 100%;
-}
+        table.type09 {
+            border-collapse: collapse;
+            text-align: left;
+            line-height: 1.5;
+            margin: 0 auto;
+        }
 
-.dialog table{
-    width: 100%;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-}
-.dialog table tr th {
-    text-align: left;
-}
-.dialog table tr td input {
-    width: 100%;
-}
-nav {
-    background-color: #aaa;
-    padding: 10px;
-}
-nav a {
-    display: block;
-}
-button {
-    cursor: pointer;
-}
-</style>
+        table.type09 thead th {
+            padding: 10px;
+            font-weight: bold;
+            vertical-align: top;
+            color: #369;
+            border-bottom: 3px solid #036;
+        }
+
+        table.type09 tbody th {
+            width: 150px;
+            padding: 10px;
+            font-weight: bold;
+            vertical-align: top;
+            border-bottom: 1px solid #ccc;
+            background: #f3f6f7;
+        }
+
+        table.type09 td {
+            width: 350px;
+            padding: 10px;
+            vertical-align: top;
+            border-bottom: 1px solid #ccc;
+        }
+
+        form {
+            width: 400px;
+            margin: 0 auto;
+        }
+
+        form>div>textarea {
+            height: 150px;
+        }
+
+        #InputCode {
+            width: 400px;
+        }
+
+        .ans_text {
+            width: 400px;
+        }
+
+        .ans_text textarea {
+            width: 100%;
+        }
+
+        .dialog table {
+            width: 100%;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .dialog table tr th {
+            text-align: left;
+        }
+
+        .dialog table tr td input {
+            width: 100%;
+        }
+
+        nav {
+            background-color: #aaa;
+            padding: 10px;
+        }
+
+        nav a {
+            display: block;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
-   <main>
-       <fieldset id="add">
+    <main>
+        <fieldset id="add">
             <legend>
                 <h2>답변 추가하기</h2>
             </legend>
@@ -98,71 +113,71 @@ button {
             </div>
             <button id="addAnswer">답변생성</button>
 
-       </fieldset>
+        </fieldset>
 
-       <fieldset id="sentence">
+        <fieldset id="sentence">
             <legend>
-                 <h2>문장의미(sentence) 리스트</h2>
+                <h2>문장의미(sentence) 리스트</h2>
             </legend>
-             <table class="type09">
-                 <thead>
-                     <th scope="cols">_id</th>
-                     <th scope="cols">input_code</th>
-                     <th scope="cols">input_text</th>
-                     <th scope="cols">en_sentence</th>
-                     <th scope="cols">수정</th>
-                     <th scope="cols">삭제</th>
-                 </thead>
-                 <tbody id="sentensList">
-                     <!--
+            <table class="type09">
+                <thead>
+                    <th scope="cols">_id</th>
+                    <th scope="cols">input_code</th>
+                    <th scope="cols">input_text</th>
+                    <th scope="cols">en_sentence</th>
+                    <th scope="cols">수정</th>
+                    <th scope="cols">삭제</th>
+                </thead>
+                <tbody id="sentensList">
+                    <!--
                      <tr>
                          <td></td>
                          <td></td>
                          <td></td>
                      </tr>
-                     -->   
-                 </tbody>
-             </table>
+                     -->
+                </tbody>
+            </table>
         </fieldset>
 
-       <fieldset id="answer">
+        <fieldset id="answer">
             <legend>
-                 <h2>답변(answer) 리스트</h2>
+                <h2>답변(answer) 리스트</h2>
             </legend>
-             <table class="type09">
-                 <thead>
-                     <th scope="cols">_id</th>
-                     <th scope="cols">input_code</th>
-                     <th scope="cols">answer_text_ko</th>
-                     <th scope="cols">answer_text_en</th>
-                     <th scope="cols">-</th>
-                 </thead>
-                 <tbody id="answersList">
-                     <!--
+            <table class="type09">
+                <thead>
+                    <th scope="cols">_id</th>
+                    <th scope="cols">input_code</th>
+                    <th scope="cols">answer_text_ko</th>
+                    <th scope="cols">answer_text_en</th>
+                    <th scope="cols">-</th>
+                </thead>
+                <tbody id="answersList">
+                    <!--
                      <tr>
                          <td>input_code</td>
                          <td>answer_text_ko</td>
                      </tr>
-                     -->   
-                 </tbody>
-             </table>
+                     -->
+                </tbody>
+            </table>
         </fieldset>
-   </main> 
-   <nav style="position: fixed; top:50%; right:0px; transform: translateY(-50%);">
-       <a href="#add">답변 추가하기</a>
-       <a href="#sentence">sentences</a>
-       <a href="#answer">answers</a>
-   </nav>
+    </main>
+    <nav style="position: fixed; top:50%; right:0px; transform: translateY(-50%);">
+        <a href="#add">답변 추가하기</a>
+        <a href="#sentence">sentences</a>
+        <a href="#answer">answers</a>
+    </nav>
 </body>
 <script>
-//sentence 리스트
-$.ajax({
-    method: "GET",
-    url: "<%=url%>/sentence/get/list"
-})
-.done(function(data) {
-    data.forEach(el => {
-        let tr = `<tr>
+    //sentence 리스트
+    $.ajax({
+            method: "GET",
+            url: "<%=url%>/sentence/get/list"
+        })
+        .done(function (data) {
+            data.forEach(el => {
+                let tr = `<tr>
                     <td>${el._id}</td>
                     <td>${el.input_code}</td>
                     <td>${el.input_text}</td>
@@ -171,22 +186,22 @@ $.ajax({
                     <td><button onClick="sentenceDelete(\'${el._id}\');">삭제</button></td>
                 </tr>`
 
-        $("#sentensList").append(tr);
-    });
-})
-.fail(function(fail){
-    alert("실패");
-    console.log(fail);
-});
+                $("#sentensList").append(tr);
+            });
+        })
+        .fail(function (fail) {
+            alert("실패");
+            console.log(fail);
+        });
 
-//answer 리스트
-$.ajax({
-    method: "GET",
-    url: "<%=url%>/answer/get/list"
-})
-.done(function(data) {
-    data.forEach(el => {
-        let tr = `<tr>
+    //answer 리스트
+    $.ajax({
+            method: "GET",
+            url: "<%=url%>/answer/get/list"
+        })
+        .done(function (data) {
+            data.forEach(el => {
+                let tr = `<tr>
                     <td>${el._id}</td>
                     <td>${el.input_code}</td>
                     <td>${el.answer_text_ko}<button onClick="answerEditKO(\'${el._id}\');" style="margin-left:10px;">수정</button></td>
@@ -194,148 +209,148 @@ $.ajax({
                     <td><button onClick="answerDelete(\'${el._id}\');">삭제</button></td>
                 </tr>`
 
-        $("#answersList").append(tr);
+                $("#answersList").append(tr);
+            });
+            console.log(data);
+        })
+        .fail(function (fail) {
+            alert("실패");
+            console.log(fail);
+        });
+
+    $("#addAnswer").on("click", function () {
+
+        var inputCode = $("#InputCode").val();
+        var answerTextKo = $("#answerTextKo").val();
+        var answerTextEn = $("#answerTextEn").val() == '' ? null : $("#answerTextEn").val();
+
+        //answer 추가
+        $.ajax({
+                method: "POST",
+                url: "<%=url%>/answer/add",
+                data: {
+                    "input_code": inputCode,
+                    "answer_text_ko": answerTextKo,
+                    "answer_text_en": answerTextEn
+                }
+            })
+            .done(function (data) {
+                console.log(data);
+                location.reload();
+            })
+            .fail(function (fail) {
+                alert("실패");
+                console.log(fail);
+            });
+
     });
-    console.log(data);
-})
-.fail(function(fail){
-    alert("실패");
-    console.log(fail);
-});
 
-$("#addAnswer").on("click", function(){
+    //sentence 수정
+    function sentenceEdit(_id) {
+        var editedText = prompt("input_code");
+        if (editedText == null) return;
+        $.ajax({
+                method: "PUT",
+                url: "<%=url%>/sentence/update",
+                data: {
+                    "_id": _id,
+                    "input_code": editedText
+                }
+            })
+            .done(function (data) {
+                console.log(data);
+                location.reload();
+            })
+            .fail(function (fail) {
+                alert("실패");
+                console.log(fail);
+            })
+    }
 
-    var inputCode = $("#InputCode").val();
-    var answerTextKo = $("#answerTextKo").val();
-    var answerTextEn = $("#answerTextEn").val() == '' ? null : $("#answerTextEn").val();
+    //sentence 삭제
+    function sentenceDelete(_id) {
+        var _confirm = confirm("해당 sentence를 삭제하시겠습니까?");
+        if (_confirm == false) return;
+        $.ajax({
+                method: "DELETE",
+                url: "<%=url%>/sentence/delete",
+                data: {
+                    "_id": _id
+                }
+            })
+            .done(function (data) {
+                console.log(data);
+                location.reload();
+            })
+            .fail(function (fail) {
+                alert("실패");
+                console.log(fail);
+            })
+    }
 
-    //answer 추가
-    $.ajax({
-        method: "POST",
-        url: "<%=url%>/answer/add",
-        data: { 
-            "input_code": inputCode,
-            "answer_text_ko": answerTextKo,
-            "answer_text_en": answerTextEn
-        }
-    })
-    .done(function(data) {
-        console.log(data);
-        location.reload();
-    })
-    .fail(function(fail){
-        alert("실패");
-        console.log(fail);
-    });
+    //answer 수정
+    function answerEditKO(_id) {
+        var editedText = prompt("answer_text_ko");
+        if (editedText == null) return;
+        $.ajax({
+                method: "PUT",
+                url: "<%=url%>/answer/update/answer_text_ko",
+                data: {
+                    "_id": _id,
+                    "answer_text_ko": editedText
+                }
+            })
+            .done(function (data) {
+                console.log(data);
+                location.reload();
+            })
+            .fail(function (fail) {
+                alert("실패");
+                console.log(fail);
+            })
+    }
 
-});
+    function answerEditEN(_id) {
+        var editedText = prompt("answer_text_en");
+        if (editedText == null) return;
+        $.ajax({
+                method: "PUT",
+                url: "<%=url%>/answer/update/answer_text_en",
+                data: {
+                    "_id": _id,
+                    "answer_text_en": editedText
+                }
+            })
+            .done(function (data) {
+                console.log(data);
+                location.reload();
+            })
+            .fail(function (fail) {
+                alert("실패");
+                console.log(fail);
+            })
+    }
 
-//sentence 수정
-function sentenceEdit(_id){
-    var editedText = prompt("input_code");
-    if(editedText == null) return;
-    $.ajax({
-        method: "PUT",
-        url: "<%=url%>/sentence/update",
-        data: { 
-            "_id": _id,
-            "input_code": editedText
-        } 
-    })
-    .done(function(data){
-        console.log(data);
-        location.reload();
-    })
-    .fail(function(fail){
-        alert("실패");
-        console.log(fail);
-    })
-} 
-
-//sentence 삭제
-function sentenceDelete(_id){
-    var _confirm = confirm("해당 sentence를 삭제하시겠습니까?");
-    if(_confirm == false) return;
-    $.ajax({
-        method: "DELETE",
-        url: "<%=url%>/sentence/delete",
-        data: {
-            "_id": _id
-        }
-    })
-    .done(function(data){
-        console.log(data);
-        location.reload();
-    })
-    .fail(function(fail){
-        alert("실패");
-        console.log(fail);
-    })
-}  
-
-//answer 수정
-function answerEditKO(_id){
-    var editedText = prompt("answer_text_ko");
-    if(editedText == null) return;
-    $.ajax({
-        method: "PUT",
-        url: "<%=url%>/answer/update/answer_text_ko",
-        data: { 
-            "_id": _id,
-            "answer_text_ko": editedText
-        } 
-    })
-    .done(function(data){
-        console.log(data);
-        location.reload();
-    })
-    .fail(function(fail){
-        alert("실패");
-        console.log(fail);
-    })
-}  
-
-function answerEditEN(_id){
-    var editedText = prompt("answer_text_en");
-    if(editedText == null) return;
-    $.ajax({
-        method: "PUT",
-        url: "<%=url%>/answer/update/answer_text_en",
-        data: { 
-            "_id": _id,
-            "answer_text_en": editedText
-        } 
-    })
-    .done(function(data){
-        console.log(data);
-        location.reload();
-    })
-    .fail(function(fail){
-        alert("실패");
-        console.log(fail);
-    })
-}  
-
-//answer 삭제
-function answerDelete(_id){
-    var _confirm = confirm("해당 answer를 삭제하시겠습니까?");
-    console.log(_confirm);
-    if(_confirm == false) return;
-    $.ajax({
-        method: "DELETE",
-        url: "<%=url%>/answer/delete",
-        data: {
-            "_id": _id
-        }
-    })
-    .done(function(data){
-        console.log(data);
-        location.reload();
-    })
-    .fail(function(fail){
-        alert(fail);
-    })
-} 
-
+    //answer 삭제
+    function answerDelete(_id) {
+        var _confirm = confirm("해당 answer를 삭제하시겠습니까?");
+        console.log(_confirm);
+        if (_confirm == false) return;
+        $.ajax({
+                method: "DELETE",
+                url: "<%=url%>/answer/delete",
+                data: {
+                    "_id": _id
+                }
+            })
+            .done(function (data) {
+                console.log(data);
+                location.reload();
+            })
+            .fail(function (fail) {
+                alert(fail);
+            })
+    }
 </script>
+
 </html>
