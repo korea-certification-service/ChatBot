@@ -69,7 +69,8 @@ module.exports = (app) => {
             .replace(regExp, "")
             .toLowerCase(); //특수문자를 제거하고 소문자로 변경
 
-        request({
+        //사용자가 입력한 텍스트가 예상질의에 있는지 확인
+        request({ 
                 uri: `${uri}/sentence/get/detail`,
                 method: 'GET',
                 body: {
@@ -110,6 +111,8 @@ module.exports = (app) => {
                                 .replace(/&#39;/gi, "'") //어퍼스트로피의 특수문자태그를 문자열 어퍼스트로피로 변경
                                 .replace(regExp, "") //특수문자 전부 제거
                                 .toLowerCase(); //소문자로 변경
+
+                            //번역된 텍스트가 예상질의에 있는지 확인
                             request({
                                     uri: `${uri}/sentence/get/detail`,
                                     method: 'GET',
@@ -247,6 +250,8 @@ module.exports = (app) => {
 
                 } else { //예상 질의와 일치한 경우
                     console.log("1차 가공후 예상 질의와 일치한 경우");
+                    
+                    //예상질의에 해당하는 답변이 있는지 확인
                     return request({
                             uri: `${uri}/answer/get/list`,
                             method: 'GET',
