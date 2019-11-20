@@ -5,21 +5,23 @@ module.exports = (app) => {
     //챗봇 화면 랜더링
     app.get('/', (req, res) => {
 
-        if (!req.query.loginToken || !req.query.userId) {
+        if (!req.query.loginToken || !req.query.userId) { //로그인 안한경우
+            
             res.render("notice.html");
-        } else {
-            res.render("index.html", {
+
+        } else {//로그인 한경우
+
+            res.render("index.html", { 
                 userId: req.query.userId,
                 loginToken: req.query.loginToken,
                 MarketMach_uri: config.MarketMach_uri
             });
-        }
 
-        console.log(req.query);
+        }
 
     });
 
-    //테스트용
+    //테스트용 챗봇
     app.get('/ts', (req, res) => {
         res.render("index.html", {
             userId: "5d2304e06cc0ee330c4ff2cd",
@@ -28,6 +30,7 @@ module.exports = (app) => {
         });
     })
 
+    //관리페이지
     app.get('/manage/:id', (req, res) => {
         if (req.params.id === "machadmin") {
             res.render("manage.html", {
@@ -40,8 +43,6 @@ module.exports = (app) => {
 
     //챗봇 응답 로직 api
     app.post('/logic', async (req, res) => {
-
-        console.log(req.body); //클라이언트가 전달한 데이터 객체
 
         let uri = config.uri;
         let userText = req.body.userText; //유저가 입력한 텍스트
@@ -60,10 +61,13 @@ module.exports = (app) => {
         history.bot_text = null;
         history.exception_text = null
 
-        //1차 가공
-        let regExp = /[\{\}\[\]\/.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\"]/gi;
-        let input_text = userText.replace(regExp, "").toLowerCase();
-        console.log(`input_text => ${input_text}`);
+        //[ 1차 가공 ]
+        //특수문자 제거용 정규표현식
+        let regExp = /[\{\}\[\]\/.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\"]/gi; 
+        //1차가공이 끝난 문자열
+        let input_text = userText
+            .replace(regExp, "")
+            .toLowerCase(); //특수문자를 제거하고 소문자로 변경
 
         request({
                 uri: `${uri}/sentence/get/detail`,
@@ -85,8 +89,8 @@ module.exports = (app) => {
                     sentence.input_code = null;
                     sentence.keyword = null;
 
-                    //2차 가공
-                    return request({
+                    //[ 2차 가공 ]
+                    return request({ //구글번역 api
                             uri: "https://www.googleapis.com/language/translate/v2?key=AIzaSyC4zvHX4jW1BFgzeXObqDDOeGMFBHZgrlQ",
                             method: "POST",
                             qs: {
@@ -96,8 +100,16 @@ module.exports = (app) => {
                             },
                         })
                         .then(data => {
+                            //특수문자 제거용 정규표현식
                             let regExp = /[\{\}\[\]\/.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\"]/gi;
-                            let en_sentence = JSON.parse(data).data.translations[0].translatedText.replace(/&#39;/gi, "'").replace(regExp, "").toLowerCase();
+                            //2차 가공이 끝난 문자열
+                            let en_sentence = JSON.parse(data)
+                                .data
+                                .translations[0]
+                                .translatedText
+                                .replace(/&#39;/gi, "'") //어퍼스트로피의 특수문자태그를 문자열 어퍼스트로피로 변경
+                                .replace(regExp, "") //특수문자 전부 제거
+                                .toLowerCase(); //소문자로 변경
                             request({
                                     uri: `${uri}/sentence/get/detail`,
                                     method: 'GET',
@@ -291,10 +303,9 @@ module.exports = (app) => {
                                     history.bot_text = randomAnswer.answer_text_en;
                                 }
 
-                                save_history(uri, history); //[DB추가(History Collection)]
+                                save_history(uri, history); //[ DB추가(History Collection) ]
 
                                 res.status(200).send(history.bot_text); //답변
-                                //console.log(data);
                             }
                         })
 
@@ -307,6 +318,11 @@ module.exports = (app) => {
 
 
         //////////////////////로컬 함수 모음////////////////////////
+        /**
+         * 채팅내역을 저장하는 함수
+         * @param {*String} uri api도메인
+         * @param {*Object} history 저장할 객체
+         */
         function save_history(uri, history) {
             request({
                     uri: `${uri}/history/add`,
@@ -322,6 +338,11 @@ module.exports = (app) => {
                 })
         }
 
+        /**
+         * 새로운 sentence를 저장하는 함수
+         * @param {*String} uri api도메인
+         * @param {*Object} sentence 저장할 객체
+         */
         function save_sentence(uri, sentence) {
             request({
                     uri: `${uri}/sentence/add`,
@@ -336,21 +357,5 @@ module.exports = (app) => {
                     console.log(err);
                 })
         }
-
-        function save_manage(uri, manage) {
-            request({
-                    uri: `${uri}/manage/add`,
-                    method: 'POST',
-                    body: manage,
-                    json: true
-                })
-                .then(res => {
-                    console.log(res);
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-        }
     });
-
 }

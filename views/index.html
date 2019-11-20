@@ -87,12 +87,14 @@
 
                 if (userText == "" || widthoutVoid == "") {
                     //텍스트가 없거나 공백만 있을때
-
+                    
+                    //disabledBtn값을 true로 바꿔줌
                     buttonOnOff("off");
 
                 } else if (userText != "") {
                     //텍스트가 존재할때
 
+                    //disabledBtn값을 false로 바꿔줌
                     buttonOnOff("on");
 
                 }
@@ -121,8 +123,10 @@
         });
 
 
+
+        //****************[ 기능을 담당하는 함수 ]****************
         /**
-         * ****************기능을 담당하는 함수****************
+         * 챗봇의 채팅내용을 화면에 보여주는 함수
          */
         function printUserChattingBox(userText) {
             //유저채팅을 화면에 추가
@@ -135,9 +139,6 @@
             //인풋 value값 초기화
             $iptChat.val("");
         }
-        /**
-         * 챗봇의 채팅내용을 화면에 보여주는 함수
-         */
         function printChatbotChattingBox(obj) {
             if (obj.type == "answer") {
                 //답변
@@ -219,12 +220,14 @@
             }
 
         }
+        
         /**
          * 현재날짜를 화면에 보여주는 함수 
          */
         function printNowDate() {
             $content.append('<div class="reg_date"><p> ' + nowDate() + ' </p></div>');
         }
+
         /**
          * 버튼 온/오프 스타일을 적용해주는 함수 
          */
@@ -244,9 +247,7 @@
             }
         }
 
-        /**
-         * ****************특정 값을 리턴하는 함수****************
-         */
+        //****************[ 특정 값을 리턴하는 함수 ]****************
         /**
          * 리턴값이 문자열형태의 html태그
          * 인자값으로 객체를 받음
