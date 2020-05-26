@@ -14,7 +14,8 @@ module.exports = (app) => {
             res.render("index.html", { 
                 userId: req.query.userId,
                 loginToken: req.query.loginToken,
-                MarketMach_uri: config.MarketMach_uri
+                MarketMach_uri: config.MarketMach_uri,
+                country_code: req.query.country_code
             });
 
         }
